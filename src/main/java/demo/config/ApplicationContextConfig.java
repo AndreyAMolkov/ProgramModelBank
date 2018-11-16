@@ -6,6 +6,7 @@ import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -41,8 +42,9 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 //		 return LoggerFactory.getLogger("STDOUT");
 //	 }
 //	
-	@Scope("prototype")
+	
 	@Bean(name = "story" )
+	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	public Story getStory() {
 		return new Story();
 	}

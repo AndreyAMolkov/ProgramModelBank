@@ -21,17 +21,17 @@ public abstract class BaseDao<T> implements Dao<T>{
 	        
 	    }
 
-	    @Transactional(readOnly =true, propagation = Propagation.SUPPORTS)
-	    public T getById( Long id,Class T) {
+	    @SuppressWarnings("unchecked")
+		@Transactional(readOnly =true, propagation = Propagation.SUPPORTS)
+	    public T getById( Long id,Class<?> T) {
 
 	    	em.find(T, id);
-
-	    	
 	    	return (T) em.find(T, id);
 	    }
 	    
-	    @Override
-	    public List<T> getAll(Class T ) {
+	    @SuppressWarnings("unchecked")
+		@Override
+	    public List<T> getAll(Class<?> T ) {
 
 	    	return (List<T>) em.createQuery(String.format("SELECT e FROM %s e ORDER BY id", T.getSimpleName()), T).getResultList();
 		    
@@ -46,19 +46,16 @@ public abstract class BaseDao<T> implements Dao<T>{
 	    
 	    
 	    @Transactional
-		public void add(Object obj)   {
-	    	
+		public void add(Object obj)   {	
 			em.persist(obj);
-	    	
-	    	 
+	    		 
 	      }
 		
 		@Transactional
-		public void remove(Long id,Class T)   {
+		public void remove(Long id,Class<?> T)   {
 	    	T t=getById(id,T);
 			em.remove(t);
 	    	
-	    	 
 	      }
 	
 }

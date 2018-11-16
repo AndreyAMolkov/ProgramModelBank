@@ -94,25 +94,7 @@ public class Account {
 		
 		this.sum = getSum()+ sum;
 	}
-	private void setInputSum(Long input) {
-		
-		Long before = getSum();
-		if(before ==null)
-			before =0L;
-		
-		Long result = before + input;
-		
-		setSum(result);
-		
-	}
-	private void setOutputSum(Long output) {
-		Long was = getSum();
-		
-		Long result = was - output;
-		
-		setSum(result);
-		
-	}
+
 	
 	public String getHistoriesSize() {
 		if(histories == null) {
@@ -166,10 +148,10 @@ public class Account {
  
 		if(validateStory(story)) {
 			if(story.getOperation().toLowerCase().equals("output")) {
-				setOutputSum(sumOfStory);
+				setSum(sumOfStory);
 			}
 			else {
-				setInputSum(sumOfStory);
+				setSum(sumOfStory);
 			}
 		}else {
 				

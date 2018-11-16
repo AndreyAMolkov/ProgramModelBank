@@ -37,9 +37,7 @@ public class HomeController {
 	@RequestMapping("/client/listAll")
 	public ModelAndView handleRequest() throws Exception{
 		List<Client> listClients =  (List<Client>) dao.getAll(Client.class);
-
-		listClients.stream().forEach(c->c.getAccounts());//for update history
-		
+		listClients.stream().forEach(c->c.getAccounts());//for update history	
 		ModelAndView model = new ModelAndView("allClients");
 		model.addObject("clients", listClients);
 		//model.addObject("listAccount", listAccount);
@@ -98,10 +96,28 @@ public class HomeController {
 
 	}
 	
-	
+
+	@RequestMapping(value = "/admin/deleteClient", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView deleteClientForAdmin(
+			@RequestParam(value = "id") Long id) {
+		
+	//	Client client = (Client) dao.getById(id,Client.class);
+		try {
+			dao.remove(id,Client.class);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+		
+		List<Client> listClients =  (List<Client>) dao.getAll(Client.class);
+		listClients.stream().forEach(c->c.getAccounts());//for update history	
+		ModelAndView model = new ModelAndView("allClients");
+		model.addObject("clients", listClients);
+		
+		return model;
+	}
 	@RequestMapping(value = "/admin/showClient", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView showClientForAdmin(
-			@RequestParam(value = "id", required = false) Long id,
+			@RequestParam(value = "id") Long id,
 			@RequestParam(value = "idAccount", required = false) Long idAccount) {
 		Client client = (Client) dao.getById(id,Client.class);
 		ModelAndView model = new ModelAndView("showClient");
@@ -109,8 +125,9 @@ public class HomeController {
 			Account account = (Account) dao.getById(idAccount,Account.class);
 			model.addObject("currentAccount", account);
 		}
-
-		return model.addObject("client", client);
+		model.addObject("client", client);
+		
+		return model;
 	}
 
 	@RequestMapping(value = "/admin/edit", method={RequestMethod.GET,RequestMethod.POST})
@@ -188,7 +205,9 @@ public class HomeController {
 //		
 //		return model;
 //	}
-	 @RequestMapping(value = "/client/transfer", method = RequestMethod.POST)
+	
+	
+	@RequestMapping(value = "/client/transfer", method = RequestMethod.POST)
 	    public ModelAndView viewSendMoneyPage(
 	    		@RequestParam(value = "idClient", required = false)Long id,
 	    		@RequestParam(value = "idAccount", required = false)Long idAccount) {
@@ -209,15 +228,12 @@ public class HomeController {
 	 
 	    @RequestMapping(value = "/client/sendMoney", method = RequestMethod.POST)
 	    public ModelAndView processSendMoney(
-	    		@RequestParam(value = "fromAccountId", required = false)Long fromAccountId,
-	    		@RequestParam(value = "toAccountId", required = false)Long toAccountId,
-	    		@RequestParam(value = "id", required = false)Long id,
-	    		@RequestParam(value = "amount", required = false)Long amount) {
+	    		@RequestParam(value = "fromAccountId")Long fromAccountId,
+	    		@RequestParam(value = "toAccountId")Long toAccountId,
+	    		@RequestParam(value = "id")Long id,
+	    		@RequestParam(value = "amount")Long amount) {
 	 //   	SendMoneyForm sendMoneyForm;
 
-	    	Client client = (Client) dao.getById(id,Client.class);
-	    	model.setViewName("showClient");
-	        model.addObject("client", client);
 	        try {
 //	            dao.sendMoney(sendMoneyForm.getFromAccountId(), //
 //	                    sendMoneyForm.getToAccountId(), //
@@ -227,8 +243,10 @@ public class HomeController {
 	            
 	        	//model.add("errorMessage", "Error: " + e.getMessage());
 	            
-	            return model;
 	        }
+	    	Client client = (Client) dao.getById(id,Client.class);
+	    	model.setViewName("showClient");
+	        model.addObject("client", client);
 	        return model;
 	    }
 	private String getPrincipal(){

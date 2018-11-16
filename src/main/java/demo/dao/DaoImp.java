@@ -1,8 +1,13 @@
 package demo.dao;
 	
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import demo.model.Account;
 import demo.model.Client;
 import demo.model.Login;
+import demo.model.Login_;
 import demo.model.Story;
 
 
@@ -48,11 +54,6 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 		
 	}
 
-	@Override
-	public Login findLoginByname(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	 @Transactional(rollbackFor=DataAccessException.class)
 	    public Boolean newAccount( Long id,Class T)   {
@@ -96,9 +97,9 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	        }
 	//        Story story = account.getNewStory();
 	        if(amount >= 0)
-	        	story.input("transfer from  + idPartner",amount);
+	        	story.input("transfer from"  + idPartner,amount);
 	        else
-	        	story.output("transfer from  + idPartner",amount);
+	        	story.output("transfer to "  + idPartner,amount);
 	        
 	        account.setHistories(story);
 	    }
@@ -110,6 +111,33 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	        addAmount(toAccountId, amount, fromAccountId);
 	        addAmount(fromAccountId, -amount, toAccountId);
 	    }
+
+		@Override
+		public Login findLoginByname(String username) {
+			
+			Login user =null;
+			List<Login> listUser = null;
+
+			CriteriaBuilder builder = em.getCriteriaBuilder();
+			CriteriaQuery<Login> criteria = builder.createQuery( Login.class );
+			Root<Login> root = criteria.from( Login.class );
+			criteria.select( root );
+			criteria.where( builder.equal( root.get( Login_.name ), username ) );
+
+			listUser = em.createQuery( criteria ).getResultList();
+
+			em.close();
+					  try {
+						user = listUser.get(0);
+						
+					} catch (java.lang.IndexOutOfBoundsException e) {
+						
+						return null;
+					}
+							
+
+			return user;
+		}
 
 
 

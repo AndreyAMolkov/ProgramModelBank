@@ -35,8 +35,10 @@ public class UserDetailsServiceImp implements UserDetailsService {
       Client client = login.getClient();
       
       builder = org.springframework.security.core.userdetails.User.withUsername(username);
+//      builder.idClient(login.getIdClient());
       builder.password(login.getPassword());
       builder.roles(login.getRole());
+
     } else {
       throw new UsernameNotFoundException("User: " + username +" not found");
     }

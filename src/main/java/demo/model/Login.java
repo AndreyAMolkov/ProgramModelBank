@@ -84,6 +84,9 @@ public class Login{
 	public void setRole(String role) {
 		this.role = role;
 	}
+	public Long getIdClient() {
+		return client.getId();
+	}
 	@Override
 	public String toString() {
 		return login + " : " + password

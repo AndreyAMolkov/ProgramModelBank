@@ -36,7 +36,9 @@ th, td {
 	  </tr>  
 	    <c:forEach var="client" items="${clients}" varStatus="i">
 	        <tr>
-	           <td style="width: 34px; ">${client.getId()}</td>
+	           <td style="width: 34px; ">
+	               ${client.getId()}</td>
+	               
 	           <td>
 	               ${client.getData()}
 	           </td>
@@ -55,38 +57,31 @@ th, td {
 						<ul>
 						 <c:forEach var="account" items="${client.getAccounts()}" >
 						 
-						    <li>
-							 
-						      ${account.getNumber()}
-							  
-						      
-						    </li>
+						    <li>${account.getNumber()} </li>
 						    
 						  </c:forEach>  
 						</ul>
-	           
-	           
-	           </td>
-	            <td>
-	             <form id="show", action="/Bank/admin/showClient" method="post" style="width: 51px; height: 44px; ">
-                                    <input type="hidden" name="id" value="${client.getId()}">
-                                     <p><input type="submit" value="show" form="show"></p> 
-                               </form> 
-	                    <ul>
-	                     <c:forEach var="account" items="${client.getAccounts()}" >
-
-	                        <li> ${account.getHistoriesSize()} </li>
-	                        
-	                      </c:forEach>  
-	                    </ul>
-	           
-	           
-	           </td>            
-	                           
-	                           
+				           </td>
+				            <td>
+				             <form id="show" action="/Bank/admin/showClient" method="post" style="width: 51px; height: 44px; ">
+			                                    
+			                                     <p><input type="submit" value="show" form="show" id="show"></p> 
+			                               </form> 
+				                    <ul>
+				                     <c:forEach var="account" items="${client.getAccounts()}" >
+			
+				                        <li> ${account.getHistoriesSize()} </li>
+				                        
+				                      </c:forEach>  
+				                    </ul>
+				           </td> 
 	           <td>
                   
 	              <a href="/Bank/admin/deleteClient?id=${client.getId() }">Delete</a>
+	               <form  id="show" action="/Bank/admin/showClient" method="post" style="width: 51px; height: 44px; ">
+                         <input type="hidden" name="id" value="${client.getId() }">                       
+                        <input type="submit" value="show" form="show" id="show"> 
+                   </form> 
 	           </td>
 	        </tr>
 	      </c:forEach>
