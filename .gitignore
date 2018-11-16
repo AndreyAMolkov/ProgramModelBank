@@ -1,0 +1,12 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# castom for Hello
+.apt_generated_tests/
+.apt_generated
+
+# Maven
+log/
+target/

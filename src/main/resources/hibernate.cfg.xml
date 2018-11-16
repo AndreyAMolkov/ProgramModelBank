@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-configuration PUBLIC
+
+  "-//Hibernate/Hibernate Configuration DTD//EN"
+
+  "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+  <session-factory>
+
+    <property name="connection.url">jdbc:mysql://localhost/bank</property>
+
+ 
+
+    <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+
+
+    <property name="connection.username">root</property>
+
+    <property name="connection.password">1234</property>
+    
+    <property name="connection.pool_size">1000</property>
+
+
+     <property name="hbm2ddl.auto">update</property> 
+
+
+
+    <property name="show_sql">true</property>
+
+    <property name="format_sql">true</property>
+
+    <property name="use_sql_comments">false</property>
+
+
+
+    <mapping class="demo.model.Client"></mapping>
+    <mapping class="demo.model.AccountOfClient"></mapping>
+    <mapping class="demo.model.DataOfClient"></mapping>
+    <mapping class="demo.model.LoginOfClient"></mapping>
+    <mapping class="demo.model.LoginOfAccount"></mapping>
+    <mapping class="demo.model.StoryOfAccount"></mapping>
+
+
+
+  </session-factory>
+
+</hibernate-configuration>
