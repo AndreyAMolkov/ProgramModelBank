@@ -13,6 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import freemarker.core.ReturnInstruction.Return;
 
 @Entity(name="Client")
 @Table(name="clients")
@@ -26,12 +31,15 @@ public class Client {
 	@JoinColumn(name="data_id")
 	private Data data;
 	
+	@Autowired
+	@javax.persistence.Transient
+	private Story story;
 	 
 	@OneToOne( cascade=CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY)
 	@JoinColumn(name="loginOfClient_id")
 	private Login login;
 	
-	 @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.EAGER)
+	 @OneToMany(orphanRemoval = true, fetch=FetchType.EAGER)
 	 @JoinColumn(name = "client_id")
 	private List<Account> accounts;
 	
@@ -123,5 +131,13 @@ public class Client {
 				+ ", accounts=" + accounts + "]";
 	}
  
+
+
+	public Story getStory() {
+		return story;
+	}
+	public void setStory(Story story) {
+		this.story = story;
+	}
 	
 }

@@ -24,11 +24,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import demo.dao.Dao;
 import demo.dao.DaoImp;
-import demo.model.Account;
-import demo.model.Client;
-import demo.model.Data;
-import demo.model.Login;
-import demo.model.Story;
+import demo.model.*;
+
 
 @Configuration
 @EnableWebMvc
@@ -42,6 +39,10 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 //		 return LoggerFactory.getLogger("STDOUT");
 //	 }
 //	
+	@Bean
+	public InfoProblem infoProblem() {
+		return new InfoProblem();
+	}
 	
 	@Bean(name = "story" )
 	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -75,7 +76,7 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		cpds.setUrl("jdbc:mysql://localhost:3306/bank?useSSL=false"); 
+		cpds.setUrl("jdbc:mysql://localhost:3306/bank?useSSL=false&allowPublicKeyRetrieval=true"); 
 		cpds.setUser("root"); 
 		cpds.setPassword("1234"); 
 		SharedPoolDataSource tds = new SharedPoolDataSource(); 
@@ -102,7 +103,7 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 		sessionBuilder.setProperty("hibernate.dialect", "MySQL57InnoDB");
 		sessionBuilder.setProperty("hibernate.show_sql", "true");
 		sessionBuilder.setProperty("hbm2ddl.auto", "update");
-		sessionBuilder.setProperty("use_sql_comments", "true");
+		sessionBuilder.setProperty("hibernate.use_sql_comments", "true");
 		sessionBuilder.setProperty("hibernate.enable_lazy_load_no_trans", "true");	
 		return sessionBuilder.buildSessionFactory();
 	}

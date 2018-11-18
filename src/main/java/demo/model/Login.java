@@ -6,11 +6,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity(name="Login")
-@Table(name="logins")
+@Table(name="logins",uniqueConstraints={@UniqueConstraint(columnNames={"login"})})
 public class Login{
 	
 	 @Id
@@ -20,8 +21,11 @@ public class Login{
 	@OneToOne( mappedBy = "login")
 	private Client client;
 	
+
 	private String login;
+	
 	private String password;
+	
 	private String role;
 	
 	

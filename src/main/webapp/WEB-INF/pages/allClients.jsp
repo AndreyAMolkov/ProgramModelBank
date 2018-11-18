@@ -21,6 +21,18 @@ th, td {
  <div align="center"> 
     <h1>Clients of a Bank</h1>
     <h2><a href="/Bank/admin/newClient">New Client</a></h2>
+    	<form  id="show" action="/Bank/admin/showClient" method="post">  
+          <input name="id" >                       
+          <input type="submit" value="show" form="show" id="show"> 
+        </form> 
+	     <form  id="delete" action="/Bank/admin/deleteClient" method="post">  
+          <input name="id" >                       
+          <input type="submit" value="delete" form="delete" id="delete"> 
+        </form>  
+        <form id="addAccount" action="/Bank/admin/addAccount" method="post">
+          <input name="idClient" placeholder="input client's id" >
+          <input type="submit" value="addAccount" >  
+        </form>    
 	<table>
 	  <tr>
 	    <th colspan="7">${login.getLogin()}</th>      
@@ -32,7 +44,6 @@ th, td {
 	    <td style="width: 84px; ">Password</td> 
 	    <td style="width: 102px; ">number of accounts</td>
 	    <td style="width: 77px; ">Count Histories</td>
-	    <td style="width: 68px; ">Delete</td>
 	  </tr>  
 	    <c:forEach var="client" items="${clients}" varStatus="i">
 	        <tr>
@@ -50,11 +61,7 @@ th, td {
 	           </td>
 	                           
 	           <td>
-	           <form id="add", action="/Bank/admin/addAccount" method="post" style="width: 51px; height: 44px; ">
-                    <input type="hidden" name="id" value="${client.getId()}">
-                     <p><input type="submit" value="add" form="add"></p> 
-               </form> 
-						<ul>
+	         		<ul>
 						 <c:forEach var="account" items="${client.getAccounts()}" >
 						 
 						    <li>${account.getNumber()} </li>
@@ -63,10 +70,7 @@ th, td {
 						</ul>
 				           </td>
 				            <td>
-				             <form id="show" action="/Bank/admin/showClient" method="post" style="width: 51px; height: 44px; ">
-			                                    
-			                                     <p><input type="submit" value="show" form="show" id="show"></p> 
-			                               </form> 
+				           
 				                    <ul>
 				                     <c:forEach var="account" items="${client.getAccounts()}" >
 			
@@ -75,14 +79,7 @@ th, td {
 				                      </c:forEach>  
 				                    </ul>
 				           </td> 
-	           <td>
-                  
-	              <a href="/Bank/admin/deleteClient?id=${client.getId() }">Delete</a>
-	               <form  id="show" action="/Bank/admin/showClient" method="post" style="width: 51px; height: 44px; ">
-                         <input type="hidden" name="id" value="${client.getId() }">                       
-                        <input type="submit" value="show" form="show" id="show"> 
-                   </form> 
-	           </td>
+	           
 	        </tr>
 	      </c:forEach>
 	</table>

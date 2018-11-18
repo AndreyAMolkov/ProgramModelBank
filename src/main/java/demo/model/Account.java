@@ -54,7 +54,7 @@ public class Account {
 	}
 
 
-	public Account(long inputSum) {
+	private Account(long inputSum) {
 		setSum(inputSum);
 	}
 
@@ -176,7 +176,6 @@ public class Account {
 		return "[" +"number=" + number + ", sum=" + sum + "]";
 				
 	}
-
 	
 	
 	

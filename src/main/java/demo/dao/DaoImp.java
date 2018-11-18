@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -32,10 +33,16 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	 @PersistenceContext
 	 private EntityManager em;
 	 
-	 @Autowired
-	 private Story story;
-	
-	 @Autowired
+	// @Autowired
+	 private Story storyInput;
+	// @Autowired
+	 private Story storyOutput;
+	 
+	public Story getStory() {
+		return new Story();
+	}
+
+	@Autowired
 	 private PlatformTransactionManager transactionManager;
 	 
 
@@ -96,12 +103,16 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	                    "The money in the account '" + id + "' is not enough (" + account.getSum() + ")");
 	        }
 	//        Story story = account.getNewStory();
-	        if(amount >= 0)
-	        	story.input("transfer from"  + idPartner,amount);
-	        else
-	        	story.output("transfer to "  + idPartner,amount);
+	        if(amount >= 0) {
+	        	storyInput=getStory();
+	        	storyInput.input("transfer from"  + idPartner,amount);
+	        	account.setHistories(storyInput);
+	        }else {
+	        	storyOutput=getStory();
+	        	storyOutput.output("transfer to "  + idPartner,amount);
+	        	account.setHistories(storyOutput);
+	        }
 	        
-	        account.setHistories(story);
 	    }
 	 
 	    // Do not catch BankTransactionException in this method.
@@ -111,39 +122,72 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	        addAmount(toAccountId, amount, fromAccountId);
 	        addAmount(fromAccountId, -amount, toAccountId);
 	    }
-
+	   
+	    @Transactional(readOnly=true)
 		@Override
-		public Login findLoginByname(String username) {
+		public Login findLoginByname(String username){
 			
-			Login user =null;
-			List<Login> listUser = null;
-
-			CriteriaBuilder builder = em.getCriteriaBuilder();
-			CriteriaQuery<Login> criteria = builder.createQuery( Login.class );
-			Root<Login> root = criteria.from( Login.class );
-			criteria.select( root );
-			criteria.where( builder.equal( root.get( Login_.name ), username ) );
-
-			listUser = em.createQuery( criteria ).getResultList();
-
-			em.close();
-					  try {
-						user = listUser.get(0);
-						
-					} catch (java.lang.IndexOutOfBoundsException e) {
-						
-						return null;
-					}
-							
-
+			TypedQuery<Login> list=null;
+			list = em.createQuery(
+					  "SELECT u from Login u WHERE u.login = :username", Login.class).
+					  setParameter("username", username);		
+			
+			Login user=null;
+			try {
+				user=list.getSingleResult();
+			}catch (javax.persistence.NoResultException e) {
+				// TODO: handle exception
+			}
+			
 			return user;
 		}
+		@Transactional
+		public Boolean addSumAccount(Long id, Long number, Long sum, String source) {
+			Client client =  (Client) getById(id,Client.class);	
+			for (Account account : client.getAccounts()) {
+				if(account.getNumber().equals(number)) {
+					storyInput.input(source, sum);
+					account.setHistories(storyInput);
+					return true;
+				
+				}
+			}
+			
+		return false;
+		}
+		
+		@Transactional
+		public Boolean deleteAccount(Long id,Long number) {
+			Client client = (Client) getById(id,Client.class);
 
-
-
+			for (Account account :client.getAccounts()) {
+				if(account.getNumber().equals(number)) {
+					client.getAccounts().remove(account);
+					return true;
+				}
+					
+				}
+		
+		return false;
+		}
 	
+		@Transactional(readOnly=true)
+		public Boolean findLoginInBd(String login) {
 
+			if(findLoginByname(login)!=null)
+				return true;
+			else
+				return false;
+		}
+		
+		public Boolean ClientHaveAccount(Client client,Long numberAccount) {
+		return client.getAccounts()
+			.stream()
+			.map(e->e.getNumber())
+			.anyMatch(e->e.equals(numberAccount));
 
+		}
+		
 }
 
 

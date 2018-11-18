@@ -38,7 +38,7 @@ public class FormLoginSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		 String nameMethod = "configureGlobal";
-		  System.out.println(nameMethod + "--------------------------------    ");
+		   
 		  
 		auth.authenticationProvider(authProvider());
 	}

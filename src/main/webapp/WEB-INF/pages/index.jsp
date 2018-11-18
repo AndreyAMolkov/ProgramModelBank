@@ -7,7 +7,7 @@
  
 <body>
     <h1>${message}</h1>
-    <a href="/Bank/client/listAll">GO to top secret of Bank</a>
+    <a href="/Bank/admin/listAll">GO to top secret of Bank</a>
 </body>
  
  

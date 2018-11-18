@@ -10,13 +10,34 @@
 		<title>show client for admin</title>
 	</head>
 	<body>
+	   
+	   
 	    <div align="center"> 
 		    <h1>The client of a Bank</h1>
 		    <h2><a>${client.getData()}</a></h2>
-		                     <form id="transfer" action="/Bank/client/transfer" method="post">
-                            <input type="hidden" name="idClient" value="${client.getId()}">
-                           <p><input type="submit" value="transfer" form="transfer"></p>  
-                           </form> 
+		    <c:if test = "${error != null}">
+				<div  style="color:red;font-style:italic" >${error.getCause()}</div>
+			</c:if>
+		    	<form id="delete" action="/Bank/admin/deleteAccount" method="post">
+	 				<input name="idAccount" placeholder="number of account">
+	                <input type="hidden" name="idClient" value="${client.getId()}">
+	                <input type="submit" value="delete account" form="delete">  
+                </form>
+				<form id="show" action="/Bank/admin/showHistories" method="post">
+               	<input  name="idAccount" placeholder="number of account">
+                 <input type="hidden" name="idClient" value="${client.getId()}">
+                 <input type="submit" value="show" form="show">  
+               </form>
+               <form id="addSum" action="/Bank/admin/AccountAddSum" method="post">
+		        	<input  name="idAccount" placeholder="number of account" >
+					<input  name="amount" placeholder="amount">
+		          <input type="hidden" name="idClient" value="${client.getId()}">
+		          <input type="submit" value="add sum" form="addSum">  
+		        </form> 
+		       <form id="transfer" action="/Bank/client/transfer" method="post">
+                 <input type="hidden" name="idClient"  value="${client.getId()}">
+                 <p><input type="submit" value="transfer" form="transfer"></p>  
+               </form> 
 		    <table border="1">
 		        <tr>
 		      
@@ -27,27 +48,10 @@
 			    <c:forEach var="account" items="${client.getAccounts()}">
 				    <tr>
 				           
-                           <td>
-                            
-                            ${account.getNumber()}
-                           </td>
+                           <td>${account.getNumber()} </td>
                            <td>${account.getSum()}</td>
-                           <td>
-                          
-                          
-                           <label >${account.getHistoriesSize()}</label><br>
-                        
-                           <form id="showHistory" action="/Bank/admin/showClient" method="post">
-                            <input type="hidden" name="idAccount" value="${account.getNumber()}" >
-                            <input type="hidden" name="id" value="${client.getId()}">
-                           <p><input type="submit" value="show" form="showHistory"></p>  
-                           </form>					   
-
-                               
-                           </td>
-                          
-                           
-	                   
+                           <td> <label >${account.getHistoriesSize()}</label><br>  </td>
+                    
 				     </tr>
 		         </c:forEach>
 		    </table>
@@ -73,7 +77,7 @@
 			           </tr>          
 			           <tr>
 			              <td>&nbsp;</td>
-			               <input type="hidden" name="id" value="${client.getId()}" >
+			               <input type="hidden" name="id" value="${client.getId()}">
 			              <td><input type="submit" value="Send"/></td>
 			           </tr>      
 			         </table>      

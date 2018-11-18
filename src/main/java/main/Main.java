@@ -69,8 +69,8 @@ public class Main {
 
 		    Client client =new Client(loginC, data);
 		    
-		    Account account = new Account(5000L);
-		    client.setAccounts(account);
+		  //  Account account = new Account(5000L);
+		 //   client.setAccounts(account);
 		    List<Story> history= new ArrayList<Story>(5);
 		    
 		    Story story;
