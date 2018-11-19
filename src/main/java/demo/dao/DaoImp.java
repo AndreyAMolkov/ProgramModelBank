@@ -1,14 +1,9 @@
 package demo.dao;
 	
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import demo.model.Account;
 import demo.model.Client;
 import demo.model.Login;
-import demo.model.Login_;
 import demo.model.Story;
 
 
@@ -63,7 +57,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	
 	 @Transactional(rollbackFor=DataAccessException.class)
-	    public Boolean newAccount( Long id,Class T)   {
+	    public Boolean newAccount( Long id,Class<?> T)   {
 	      Client client=null;
 	      try {
 	         client=(Client) getById(id,T);

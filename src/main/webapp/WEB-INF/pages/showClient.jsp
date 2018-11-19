@@ -57,9 +57,6 @@
 		    </table>
 		    <c:if test = "${sendMoneyForm != null}">
 
-			<div th:if="${errorMessage!=null}"
-			           style="color:red;font-style:italic" th:utext="${errorMessage}">..</div>
-
 			     <form:form action="/Bank/client/sendMoney"  method="post" modelAttribute="sendMoneyForm" >
 			         <table>
 			 

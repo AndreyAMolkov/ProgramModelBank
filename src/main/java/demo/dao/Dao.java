@@ -14,7 +14,7 @@ public interface Dao<T> {
 	public T getById( Long id, Class<?> T);
 	public Login findLoginByname(String username);
 	public void add(Object obj);
-	public Boolean newAccount( Long id,Class T);
+	public Boolean newAccount( Long id,Class<?> T);
 
 	public Class<?> nameToObject(String nameObject);
 	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount) throws BankTransactionException;

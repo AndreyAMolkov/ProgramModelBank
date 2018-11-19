@@ -4,12 +4,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +30,9 @@ public class HomeController {
 	@Autowired
 	private InfoProblem infoProblem;
 	
+	private String role;
+	
+	private Long idPrincipal;;
 //	@Autowired
 //	private SessionFactory sessionFactory;
 	
@@ -76,10 +77,27 @@ public class HomeController {
 		
 	
 	@RequestMapping(value = "/", method=RequestMethod.GET)
-	public String index() {
-		//empty
+	public ModelAndView index() {
+
+		if(role.equals("ROLE_CLIENT")) {
+			Client client = (Client) dao.getById(idPrincipal, Client.class);
+			model.setViewName("showClient");
+			model.addObject("client", client);
+			return model;
+		}
 		
-		return "index";
+		if(role.equals("ROLE_ADMIN")) {
+			List<Client> listClients =  (List<Client>) dao.getAll(Client.class);
+			model.setViewName("allClients");
+			model.addObject("clients", listClients);
+			return model;
+		}
+		if(role.equals("ROLE_CASHIER")) {
+			model.setViewName("cashier");
+			return model;
+		}
+		
+		return model;
 	}
 	
 
@@ -192,14 +210,7 @@ public class HomeController {
 		
 		return model;
 	}
-	 @RequestMapping("/failureUrl")
-	    public String fail(Model model) {
-	        
-	        model.addAttribute("message", "Incorrect password or name for  - " + getPrincipal());
-	        
-	        return "failureUrl";
-	        
-	    }
+	
 	@RequestMapping(value = "/admin/delete", method=RequestMethod.POST)
 	public ModelAndView deleteUser(
 			@RequestParam(value = "id") Long id,
@@ -303,24 +314,19 @@ public class HomeController {
 	        model.addObject("client", client);
 	        return model;
 	    }
-	private String getPrincipal(){
+	private void updateDatePrincipal(){
         String userName = null;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
      
 	        if (auth != null) {
 	    	  Authentication principal 
 	    	  			= SecurityContextHolder.getContext().getAuthentication();
-	    	   if (principal != null) {
-	            userName = principal.getName();
-	        } else {
-	            userName = "empty";
+	    	  userName = principal.getName();
+	    	  this.idPrincipal = dao.findLoginByname(userName).getIdClient();
+
+	    	  
+	    	  this.role = principal.getAuthorities().toString();
 	        }
-     
-        }
-   
-        return userName;
-       
-    
-    }
+	}
 
 }
