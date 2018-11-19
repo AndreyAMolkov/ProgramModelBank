@@ -24,7 +24,13 @@ th, td {
     	<form  id="show" action="/Bank/admin/showClient" method="post">  
           <input name="id" >                       
           <input type="submit" value="show" form="show" id="show"> 
-        </form> 
+        </form>
+	      <form  id="edit" action="/Bank/admin/populateEdit" method="post">  
+          <input name="id" placeholder="id of client">       
+          <input type="submit" value="edit" form="edit" id="edit"> 
+        </form>
+	     
+	     
 	     <form  id="delete" action="/Bank/admin/deleteClient" method="post">  
           <input name="id" >                       
           <input type="submit" value="delete" form="delete" id="delete"> 
@@ -41,6 +47,8 @@ th, td {
 	    <td style="width: 34px; ">Id client</td>
 	    <td style="width: 89px; ">Data</td> 
 	    <td style="width: 60px; ">Login</td>
+	   <td style="width: 60px; ">Role</td>
+	    
 	    <td style="width: 84px; ">Password</td> 
 	    <td style="width: 102px; ">number of accounts</td>
 	    <td style="width: 77px; ">Count Histories</td>
@@ -53,12 +61,10 @@ th, td {
 	           <td>
 	               ${client.getData()}
 	           </td>
-	           <td>
-	               ${client.getLogin().getLogin()} 
-	           </td>
-	           <td>
-	               ${client.getLogin().getPassword()}
-	           </td>
+	           <td> ${client.getLogin().getLogin()}  </td>
+	            <td> ${client.getLogin().getRole()}  </td>
+	           
+	           <td>${client.getLogin().getPassword()}</td>
 	                           
 	           <td>
 	         		<ul>

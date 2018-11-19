@@ -76,9 +76,10 @@ public class HomeController {
 	}
 		
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/", method=RequestMethod.GET)
 	public ModelAndView index() {
-
+		updateDatePrincipal();
 		if(role.equals("ROLE_CLIENT")) {
 			Client client = (Client) dao.getById(idPrincipal, Client.class);
 			model.setViewName("showClient");
@@ -114,6 +115,7 @@ public class HomeController {
 	}
 	
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/deleteClient", method={RequestMethod.POST})
 	public ModelAndView deleteClientForAdmin(
 			@RequestParam(value = "id") Long id) {
@@ -136,7 +138,7 @@ public class HomeController {
 			@RequestParam(value = "id") Long id,
 			@RequestParam(value = "idAccount", required = false) Long idAccount) {
 		Client client = (Client) dao.getById(id,Client.class);
-		model.setViewName("showClient");
+		model.setViewName("showClientAdmin");
 		if(idAccount != null) {
 			Account account = (Account) dao.getById(idAccount,Account.class);
 			model.addObject("currentAccount", account);
@@ -147,9 +149,9 @@ public class HomeController {
 	}
 	@RequestMapping(value = "/client/showClient", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView showClientForClient(
-			@RequestParam(value = "id") Long id,
 			@RequestParam(value = "idAccount", required = false) Long idAccount) {
-		Client client = (Client) dao.getById(id,Client.class);
+		Client client = (Client) dao.getById(idPrincipal,Client.class);
+		
 		model.setViewName("showClient");
 		if(idAccount != null) {
 			Account account = (Account) dao.getById(idAccount,Account.class);
@@ -159,9 +161,23 @@ public class HomeController {
 		
 		return model;
 	}
+	
+	@RequestMapping(value = "/admin/populateEdit", method={RequestMethod.POST})
+	public ModelAndView addEditClien(@RequestParam(value = "id") Long id) {
+			Client client = (Client)dao.getById(id,Client.class);
+		client.getLogin().setPasswordEmpty();
+		model.addObject("client",client);
+		model.setViewName("ClientForm");
+		return model;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/edit", method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView addNewClientForAdmin(
 			@RequestParam(value = "id", required = false) Long id,
+			@RequestParam(value = "login.id", required = false) Long idLogin,
+			@RequestParam(value = "data.id", required = false) Long idData,
 			@RequestParam(value = "login.login") String login,
 			@RequestParam(value = "login.password") String password,
 			@RequestParam(value = "login.role") String role,
@@ -172,25 +188,25 @@ public class HomeController {
 			)
 	 throws Exception{
 		Client client = new Client();
+		client.setId(id);
 		client.setData(new Data(firsName,secondName, lastName));
-		
-		if(id == null && dao.findLoginInBd(login)) {
+		client.getData().setId(idData);
+		if(dao.findLoginInBd(client.getLogin().getLogin())) {
 			model.setViewName("ClientForm");
 			infoProblem.setCause("login isn't unique");
 			model.addObject("error", infoProblem);
-			client.getLogin().setRole(role);
+			client.getLogin().setPasswordEmpty();
 			model.addObject("client", client);
 			return model;
 		}
 		
 		client.setLogin(new Login(login, password, role));	
-		if(id == null) {	
+		client.getLogin().setId(idLogin);
+		if(client.getId() == null) {	
 			dao.add(client);
-		}
-		else {
-			
-			client.setId(id);
-			dao.merge(client);
+		}else {		
+			dao.merge(client.getData());
+			dao.merge(client.getLogin());
 		}
 			List<Client> listClients =  (List<Client>) dao.getAll(Client.class);
 
@@ -296,6 +312,8 @@ public class HomeController {
 	    		model.setViewName("showClient");
 				model.addObject("client", client);
 		        model.addObject("sendMoneyForm", new SendMoneyForm());
+		        
+		        model.addObject("currentAccount",null);
 		 
 	    		return model;
 			}	
@@ -325,7 +343,7 @@ public class HomeController {
 	    	  this.idPrincipal = dao.findLoginByname(userName).getIdClient();
 
 	    	  
-	    	  this.role = principal.getAuthorities().toString();
+	    	  this.role = ((principal.getAuthorities().toArray())[0]).toString();
 	        }
 	}
 

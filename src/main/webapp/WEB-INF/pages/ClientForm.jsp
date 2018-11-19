@@ -20,6 +20,8 @@
         <table>
             <form:form action="/Bank/admin/edit" method="POST" modelAttribute="client" >
                 <form:hidden path="id"/>
+                <form:hidden path="login.id"/>
+                <form:hidden path="data.id"/>
                 <tr>
                     <td>login</td>
                     <td><form:input path="login.login" value="${client.getLogin().getLogin()}"/></td>
@@ -47,7 +49,8 @@
                  </tr>
                  <tr>     
                     <td colspan="2" align="center">
-                    <input type="submit" value="Save Changes">
+                     
+                    <input type="submit" value="Save Changes" >
                     </td>
                  </tr> 
             </form:form>

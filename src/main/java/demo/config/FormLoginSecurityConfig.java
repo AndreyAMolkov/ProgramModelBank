@@ -50,28 +50,30 @@ public class FormLoginSecurityConfig extends WebSecurityConfigurerAdapter {
 	  String nameMethod = "configure(HttpSecurity";
 	  System.out.println(nameMethod + "--------------------------------    ");
 	 
-//	 http.authorizeRequests().anyRequest()
-//	.hasRole("CLIENT")
-//    .and()
-//    .formLogin().loginPage("/login").loginProcessingUrl("/login")
-//    //.failureUrl("/login?error=true")
-//    .defaultSuccessUrl("/listAll")
-//    .failureUrl("/failureUrl")
-//    .and()
-//    .logout().logoutSuccessUrl("/failureUrl")
-//    .and()
-//    .exceptionHandling().accessDeniedPage("/accessDenied")
-//    .and()
-//    .csrf().disable();
-	  http.authorizeRequests().anyRequest().hasRole("CLIENT")
-	    .and()
-	    .authorizeRequests().antMatchers("/**").permitAll()
-	    .and()
-	    .formLogin().loginPage("/login").loginProcessingUrl("/login").permitAll()
-	    .and()
-	    .logout().logoutSuccessUrl("/listAll").permitAll()
-	    .and()
-	    .csrf().disable();
+	 http.authorizeRequests()                                                                
+     .antMatchers("/admin/**").hasRole("ADMIN")                                      
+     .antMatchers("/client/**").hasRole("CLIENT")
+     .antMatchers("/cashier/**").hasRole("CASHIER")	          
+     .anyRequest().authenticated()                                                   
+     .and()
+    .formLogin().loginPage("/login").loginProcessingUrl("/login").permitAll()
+    .failureUrl("/login?error=true")
+    .defaultSuccessUrl("/")
+    .and()
+    .logout().logoutSuccessUrl("/login")
+    .and()
+    .exceptionHandling().accessDeniedPage("/login?error=true")
+    .and()
+    .csrf().disable();
+//	  http.authorizeRequests().anyRequest().hasRole("CLIENT")
+//	    .and()
+//	    .authorizeRequests().antMatchers("/**").permitAll()
+//	    .and()
+//	    .formLogin().loginPage("/login").loginProcessingUrl("/login").permitAll()
+//	    .and()
+//	    .logout().logoutSuccessUrl("/").permitAll()
+//	    .and()
+//	    .csrf().disable();
   }
 
 

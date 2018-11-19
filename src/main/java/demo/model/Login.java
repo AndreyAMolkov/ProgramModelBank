@@ -82,6 +82,9 @@ public class Login{
 		String encoded=new BCryptPasswordEncoder().encode(password);
 		this.password = encoded;
 	}
+	public void setPasswordEmpty() {
+		this.password = "";
+	}
 	public String getRole() {
 		return role;
 	}
