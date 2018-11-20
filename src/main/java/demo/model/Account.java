@@ -11,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,8 @@ public class Account {
 	private Long number;
 	
 	
-	@OneToOne
-	@JoinColumn(name ="data_id" )
-	private Data data;
+	
+	private Long data;
 	
 	private Long sum;
 	
@@ -59,18 +57,13 @@ public class Account {
 	}
 
 
-	private String getFullName() {
-		String result = data.getFullName();
-		return result;
-	}
 
-
-	private Data getData() {
+	public Long getData() {
 		return data;
 	}
 
 
-	private void setData(Data data) {
+	public void setData(Long data) {
 		this.data = data;
 	}
 

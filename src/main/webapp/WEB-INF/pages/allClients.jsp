@@ -20,24 +20,25 @@ th, td {
 <body>
  <div align="center"> 
     <h1>Clients of a Bank</h1>
+     <a href="<c:url value="/logout" />">Logout</a>
     <h2><a href="/Bank/admin/newClient">New Client</a></h2>
     	<form  id="show" action="/Bank/admin/showClient" method="post">  
           <input name="id" >                       
-          <input type="submit" value="show" form="show" id="show"> 
+          <input type="submit" value="show" form="show" id="show" style="width: 85px; "> 
         </form>
 	      <form  id="edit" action="/Bank/admin/populateEdit" method="post">  
           <input name="id" placeholder="id of client">       
-          <input type="submit" value="edit" form="edit" id="edit"> 
+          <input type="submit" value="edit" form="edit" id="edit" style="width: 85px; "> 
         </form>
 	     
 	     
 	     <form  id="delete" action="/Bank/admin/deleteClient" method="post">  
           <input name="id" >                       
-          <input type="submit" value="delete" form="delete" id="delete"> 
+          <input type="submit" value="delete" form="delete" id="delete" style="width: 85px; "> 
         </form>  
         <form id="addAccount" action="/Bank/admin/addAccount" method="post">
           <input name="idClient" placeholder="input client's id" >
-          <input type="submit" value="addAccount" >  
+          <input type="submit" value="addAccount" style="width: 85px; ">  
         </form>    
 	<table>
 	  <tr>

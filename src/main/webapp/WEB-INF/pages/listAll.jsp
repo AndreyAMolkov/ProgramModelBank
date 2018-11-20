@@ -11,6 +11,7 @@
 	<body>
 	    <div align="center"> 
 		    <h1>Usser List</h1>
+		     <a href="<c:url value="/logout" />">Logout</a>
 		    <h2><a href="/Bank/new">New User</a></h2>
 		    
 		    <table border="1">

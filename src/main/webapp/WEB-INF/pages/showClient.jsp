@@ -13,13 +13,15 @@
 	   
 	   
 	    <div align="center"> 
+	    
 		    <h1>The client of a Bank</h1>
 		    <h2><a>${client.getData()}</a></h2>
+		     <a href="<c:url value="/logout" />">Logout</a>
 		    <c:if test = "${error != null}">
 				<div  style="color:red;font-style:italic" >${error.getCause()}</div>
 			</c:if>
 		    	
-				<form id="show" action="/Bank/admin/showHistories" method="post">
+				<form id="show" action="/Bank/client/showHistories" method="post">
                	<input  name="idAccount" placeholder="number of account">
                  <input type="hidden" name="idClient" value="${client.getId()}">
                  <input type="submit" value="show" form="show">  
@@ -29,12 +31,7 @@
                  <input type="hidden" name="idClient"  value="${client.getId()}">
                  <p><input type="submit" value="transfer" form="transfer"></p>  
                </form> 
-               <form id="addSum" action="/Bank/admin/AccountAddSum" method="post">
-		        	<input  name="idAccount" placeholder="number of account" >
-					<input  name="amount" placeholder="amount">
-		          <input type="hidden" name="idClient" value="${client.getId()}">
-		          <input type="submit" value="add sum" form="addSum">  
-		        </form>
+              
 		    <table border="1">
 		        <tr>
 		      

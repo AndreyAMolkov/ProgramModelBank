@@ -9,8 +9,10 @@
 <title>New or edit Users</title>
 </head>
 <body>
+
     <div align="center">
         <h1>New/Edit User</h1>
+         <a href="<c:url value="/logout" />">Logout</a>
             <c:if test = "${error != null}">
 			
 			<div  style="color:red;font-style:italic" >${error.getCause()}</div>

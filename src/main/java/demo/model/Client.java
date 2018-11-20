@@ -13,11 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-import freemarker.core.ReturnInstruction.Return;
 
 @Entity(name="Client")
 @Table(name="clients")
@@ -39,7 +36,7 @@ public class Client {
 	@JoinColumn(name="loginOfClient_id")
 	private Login login;
 	
-	 @OneToMany(orphanRemoval = true, fetch=FetchType.EAGER)
+	 @OneToMany(cascade=CascadeType.ALL, orphanRemoval = true, fetch=FetchType.EAGER)
 	 @JoinColumn(name = "client_id")
 	private List<Account> accounts;
 	
@@ -110,12 +107,14 @@ public class Client {
 		if(accounts ==null) {
 			accounts = new ArrayList<Account>();
 		}
+		accounts.forEach(a->a.setData(getData().getId()));
 		this.accounts = accounts;
 	}
 	public void setAccounts(Account account) {
 		if(account ==null) {
 			account = new Account();
 		}
+		account.setData(getData().getId());
 		getAccounts().add(account);
 	}
 	

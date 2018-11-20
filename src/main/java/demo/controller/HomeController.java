@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import demo.dao.BankTransactionException;
 import demo.dao.Dao;
 import demo.model.Account;
+import demo.model.AccountCheckAddSum;
 import demo.model.Client;
 import demo.model.Data;
 import demo.model.InfoProblem;
@@ -30,11 +31,12 @@ public class HomeController {
 	@Autowired
 	private InfoProblem infoProblem;
 	
-	private String role;
+	private String rolePrincipal;
 	
-	private Long idPrincipal;;
-//	@Autowired
-//	private SessionFactory sessionFactory;
+	private Long idPrincipal;
+	
+	@Autowired
+	private AccountCheckAddSum accountCheckAddSum;
 	
 	@Autowired
 	private Dao<?> dao;
@@ -57,13 +59,26 @@ public class HomeController {
 		Account account = (Account) dao.getById(idAccount,Account.class);
 		Client client = (Client) dao.getById(id,Client.class);	
 
+		model.setViewName("showClientAdmin");
+		model.addObject("client", client);
+		
+		return model.addObject("currentAccount", account);
+		
+	}
+	@RequestMapping(value = "/client/showHistories", method={RequestMethod.GET,RequestMethod.POST})
+	public ModelAndView showClientHistory(
+			@RequestParam(value = "idClient") Long id,
+			@RequestParam(value = "idAccount", required = false) Long idAccount) {
+
+		Account account = (Account) dao.getById(idAccount,Account.class);
+		Client client = (Client) dao.getById(id,Client.class);	
+
 		model.setViewName("showClient");
 		model.addObject("client", client);
 		
 		return model.addObject("currentAccount", account);
 		
 	}
-
 	
 	//Spring Security see this :
 	@RequestMapping(value = "/login", method= {RequestMethod.GET,RequestMethod.POST})
@@ -80,20 +95,21 @@ public class HomeController {
 	@RequestMapping(value = "/", method=RequestMethod.GET)
 	public ModelAndView index() {
 		updateDatePrincipal();
-		if(role.equals("ROLE_CLIENT")) {
+		if("ROLE_CLIENT".equals(rolePrincipal)) {
 			Client client = (Client) dao.getById(idPrincipal, Client.class);
 			model.setViewName("showClient");
 			model.addObject("client", client);
 			return model;
 		}
 		
-		if(role.equals("ROLE_ADMIN")) {
+		if("ROLE_ADMIN".equals(rolePrincipal)) {
 			List<Client> listClients =  (List<Client>) dao.getAll(Client.class);
+			
 			model.setViewName("allClients");
 			model.addObject("clients", listClients);
 			return model;
 		}
-		if(role.equals("ROLE_CASHIER")) {
+		if("ROLE_CASHIER".equals(rolePrincipal)) {
 			model.setViewName("cashier");
 			return model;
 		}
@@ -106,10 +122,10 @@ public class HomeController {
 	public ModelAndView addAccountForAdmin(
 			@RequestParam(value = "idClient") Long id) {
 
-		 dao.newAccount(id,Client.class);
+		dao.newAccount(id,Client.class);
 		Client client = (Client) dao.getById(id,Client.class);
 		client.getAccounts();
-		model.setViewName("showClient");			
+		model.setViewName("showClientAdmin");			
 		return model.addObject("client", client);
 
 	}
@@ -231,9 +247,8 @@ public class HomeController {
 	public ModelAndView deleteUser(
 			@RequestParam(value = "id") Long id,
 			@RequestParam(value = "object", required = false) String nameObject) {
-		Class<?> obj = dao.nameToObject(nameObject);
 		
-		dao.remove(id,obj);
+		dao.remove(id,Client.class);
 		List<Client> listClients =  (List<Client>) dao.getAll(Client.class);
 		listClients.stream().forEach(c->c.getAccounts());//for update history
 		model.setViewName("allClients");
@@ -250,24 +265,55 @@ public class HomeController {
 		Client client =  (Client) dao.getById(id,Client.class);
 		client.getAccounts().forEach(c->c.getHistories());//for update history
 		
-		model.setViewName("showClient");
+		model.setViewName("showClientAdmin");
 		model.addObject("client", client);
 		return model;
 	}
-	@RequestMapping(value = "/admin/AccountAddSum", method=RequestMethod.POST)
+	@RequestMapping(value = "/cashier/AccountCheckAddSum", method=RequestMethod.POST)
 	public ModelAndView addSumAccount(
-			@RequestParam(value = "idClient") Long id,
-			@RequestParam(value = "idAccount") Long idAccount,
+			@RequestParam(value = "idAccountTo", required = false) Long idAccountTo,
+			@RequestParam(value = "amount", required = false) Long sum,
+			@RequestParam(value = "denied") Boolean denied
+			) {
+		
+		model.setViewName("cashier");
+		accountCheckAddSum.setDenied(denied);
+		model.addObject("error", null);
+		if(denied) {
+			model.addObject("dataTransfer", null);
+			
+		}
+		else{
+			
+			accountCheckAddSum.setAmountClientAccountTo(sum);
+			accountCheckAddSum.setIdAccountTo(idAccountTo);
+			model.addObject("dataTransfer", accountCheckAddSum);
+		}
+		
+		return model;
+	}
+	@RequestMapping(value = "/cashier/AccountAddSum", method=RequestMethod.POST)
+	public ModelAndView addSumAccount(
+			@RequestParam(value = "idAccountTo") Long idAccountTo,
+			@RequestParam(value = "denied") Boolean denied,
 			@RequestParam(value = "amount") Long sum) {
 
-		
-		Boolean result =dao.addSumAccount(id,idAccount,sum,"present from admin");
-
-		Client client =  (Client) dao.getById(id,Client.class);
-		client.getAccounts().forEach(c->c.getHistories());//for update history
-		
-		model.setViewName("showClient");
-		model.addObject("client", client);
+		String infoCashier = "cashier id: " + idPrincipal + " N Novgorod";
+		if(denied) {
+			infoProblem.setCause("denied");
+		}else {
+			try {
+			dao.addSumAccount(idAccountTo,sum,infoCashier);
+			infoProblem.setCause("ok");
+			}catch (Exception e) {
+				infoProblem.setCause("Error of transaction");
+				
+			}
+			
+		}
+		model.addObject("error", infoProblem);
+		model.setViewName("cashier");
+		model.addObject("dataTransfer", null);
 		return model;
 	}
 	
@@ -303,6 +349,8 @@ public class HomeController {
 	    		@RequestParam(value = "toAccountId")Long toAccountId,
 	    		@RequestParam(value = "id")Long id,
 	    		@RequestParam(value = "amount")Long amount) {
+	    	model.addObject("error", null);
+	    	
 	    	Client client = (Client) dao.getById(id,Client.class);	
 	    	
 	    	if(!dao.ClientHaveAccount(client, fromAccountId)) {
@@ -312,8 +360,6 @@ public class HomeController {
 	    		model.setViewName("showClient");
 				model.addObject("client", client);
 		        model.addObject("sendMoneyForm", new SendMoneyForm());
-		        
-		        model.addObject("currentAccount",null);
 		 
 	    		return model;
 			}	
@@ -327,12 +373,25 @@ public class HomeController {
 	        	model.addObject("error", infoProblem);
 	            
 	        }
-	    	client = (Client) dao.getById(id,Client.class);
+
+			Account account = (Account) dao.getById(fromAccountId,Account.class);
+			client = (Client) dao.getById(id,Client.class);	
+
+			model.setViewName("showClient");
+			model.addObject("client", client);
+			model.addObject("currentAccount", account);
+	    	
+	    	
 	    	model.setViewName("showClient");
 	        model.addObject("client", client);
 	        return model;
 	    }
 	private void updateDatePrincipal(){
+		infoProblem.setCause("");
+		model.addObject("error",null);
+		model.addObject("currentAccount",null);
+		
+		
         String userName = null;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
      
@@ -343,7 +402,7 @@ public class HomeController {
 	    	  this.idPrincipal = dao.findLoginByname(userName).getIdClient();
 
 	    	  
-	    	  this.role = ((principal.getAuthorities().toArray())[0]).toString();
+	    	  this.rolePrincipal = ((principal.getAuthorities().toArray())[0]).toString();
 	        }
 	}
 

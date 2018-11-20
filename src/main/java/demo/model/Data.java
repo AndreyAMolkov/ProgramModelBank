@@ -16,6 +16,7 @@ public class Data{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name ="client_id" )
 	private Client client;

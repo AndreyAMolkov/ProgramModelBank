@@ -14,6 +14,7 @@
 	   
 	    <div align="center"> 
 		    <h1>The client of a Bank</h1>
+		     <a href="<c:url value="/logout" />">Logout</a>
 		    <h2><a>${client.getData()}</a></h2>
 		    <c:if test = "${error != null}">
 				<div  style="color:red;font-style:italic" >${error.getCause()}</div>
@@ -21,12 +22,12 @@
 		    	<form id="delete" action="/Bank/admin/deleteAccount" method="post">
 	 				<input name="idAccount" placeholder="number of account">
 	                <input type="hidden" name="idClient" value="${client.getId()}">
-	                <input type="submit" value="delete account" form="delete">  
+	                <input type="submit" value="delete account" form="delete" style="width: 104px; ">  
                 </form>
 				<form id="show" action="/Bank/admin/showHistories" method="post">
                	<input  name="idAccount" placeholder="number of account">
                  <input type="hidden" name="idClient" value="${client.getId()}">
-                 <input type="submit" value="show" form="show">  
+                 <input type="submit" value="show" form="show" style="width: 104px; ">  
                </form>
 
  

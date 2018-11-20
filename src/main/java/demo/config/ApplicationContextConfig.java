@@ -24,7 +24,13 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import demo.dao.Dao;
 import demo.dao.DaoImp;
-import demo.model.*;
+import demo.model.Account;
+import demo.model.AccountCheckAddSum;
+import demo.model.Client;
+import demo.model.Data;
+import demo.model.InfoProblem;
+import demo.model.Login;
+import demo.model.Story;
 
 
 @Configuration
@@ -39,6 +45,12 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 //		 return LoggerFactory.getLogger("STDOUT");
 //	 }
 //	
+	
+	@Bean(name="accountCheckAddSum")
+	public AccountCheckAddSum getAccountCheckAddSum() {
+		return new AccountCheckAddSum();
+	}
+	
 	@Bean
 	public InfoProblem infoProblem() {
 		return new InfoProblem();

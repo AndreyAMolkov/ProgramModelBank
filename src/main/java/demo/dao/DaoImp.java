@@ -7,7 +7,6 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Propagation;
@@ -56,32 +55,21 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	}
 
 	
-	 @Transactional(rollbackFor=DataAccessException.class)
-	    public Boolean newAccount( Long id,Class<?> T)   {
+	 @Transactional(rollbackFor=Exception.class)
+	    public void newAccount( Long id,Class<?> T)   {
 	      Client client=null;
-	      try {
+	    
 	         client=(Client) getById(id,T);
-	         client.getAccounts();
 	    	client.setAccounts(new Account());
 
-
-	    	em.merge(client);
-	    	
-	      } 
-	      catch (DataAccessException e) {
-	         System.out.println("Error in creating record, rolling back");
-	         throw e;
 	      }
-	    	
-	    	return true;
-	      }
-	 public Class<?> nameToObject(String nameObject){
-		 Object object = null;
-		 if(nameObject.equals((Client.class).getSimpleName()))
-				 object = Client.class;
-		 
-		 return (Class<?>) object;
-	 }
+//	 public Class<?> nameToObject(String nameObject){
+//		 Object object = null;
+//		 if(nameObject.equals((Client.class).getSimpleName()))
+//				 object = Client.class;
+//		 
+//		 return (Class<?>) object;
+//	 }
 
 
 	  // MANDATORY: Transaction must be created before.
@@ -117,7 +105,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	        addAmount(fromAccountId, -amount, toAccountId);
 	    }
 	   
-	    @Transactional(readOnly=true)
+	    @Transactional(readOnly=true, rollbackFor=javax.persistence.NoResultException.class)
 		@Override
 		public Login findLoginByname(String username){
 			
@@ -126,28 +114,20 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 					  "SELECT u from Login u WHERE u.login = :username", Login.class).
 					  setParameter("username", username);		
 			
-			Login user=null;
-			try {
-				user=list.getSingleResult();
-			}catch (javax.persistence.NoResultException e) {
-				// TODO: handle exception
-			}
+			Login user=list.getSingleResult();
+
 			
 			return user;
 		}
-		@Transactional
-		public Boolean addSumAccount(Long id, Long number, Long sum, String source) {
-			Client client =  (Client) getById(id,Client.class);	
-			for (Account account : client.getAccounts()) {
-				if(account.getNumber().equals(number)) {
-					storyInput.input(source, sum);
-					account.setHistories(storyInput);
-					return true;
-				
-				}
-			}
-			
-		return false;
+
+	    @Transactional(rollbackFor=Exception.class)
+		public void addSumAccount(Long number, Long sum, String source) {
+			    	
+	    	Account account = (Account) getById(number, Account.class);
+	    	storyInput = getStory();
+			storyInput.input(source, sum);
+			account.setHistories(storyInput);
+
 		}
 		
 		@Transactional
