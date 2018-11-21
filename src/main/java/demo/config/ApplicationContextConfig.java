@@ -30,83 +30,98 @@ import demo.model.Client;
 import demo.model.Data;
 import demo.model.InfoProblem;
 import demo.model.Login;
+import demo.model.SendMoneyForm;
 import demo.model.Story;
-
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("demo.*") 
+@ComponentScan("demo.*")
 @EnableTransactionManagement
 @Import({ FormLoginSecurityConfig.class })
-public class ApplicationContextConfig implements TransactionManagementConfigurer  { 
-  
+public class ApplicationContextConfig implements TransactionManagementConfigurer {
+
 //	 @Bean
 //	 public Logger logger() {
 //		 return LoggerFactory.getLogger("STDOUT");
 //	 }
 //	
+	@Bean(name="loginEntity")
+	public Login getLogin() {
+		return new Login();
+	}
 	
-	@Bean(name="accountCheckAddSum")
+	@Bean(name="sendMoneyForm")
+	public SendMoneyForm getSendMoneyForm() {
+	return new SendMoneyForm();
+	}
+	
+	@Bean(name="data")
+	public Data getData() {
+		return new Data();
+	}
+	
+	@Bean(name="client")
+	public Client getClient() {
+		return new Client();
+	}
+	
+	@Bean(name = "accountCheckAddSum")
 	public AccountCheckAddSum getAccountCheckAddSum() {
 		return new AccountCheckAddSum();
 	}
-	
+
 	@Bean
 	public InfoProblem infoProblem() {
 		return new InfoProblem();
 	}
-	
-	@Bean(name = "story" )
+
+	@Bean(name = "story")
 	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	public Story getStory() {
 		return new Story();
 	}
-	
+
 	@Bean(name = "model")
 	public ModelAndView getModel() {
 		return new ModelAndView();
 	}
-	
-	
-    @Bean(name = "viewResolver")
-    public InternalResourceViewResolver getViewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/pages/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }
-  
+
+	@Bean(name = "viewResolver")
+	public InternalResourceViewResolver getViewResolver() {
+		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+		viewResolver.setPrefix("/WEB-INF/pages/");
+		viewResolver.setSuffix(".jsp");
+		return viewResolver;
+	}
+
 	@Bean(name = "dataSourse")
 	@Primary
-	public DataSource getDataSource() {	
+	public DataSource getDataSource() {
 
-    
-		DriverAdapterCPDS cpds = new DriverAdapterCPDS(); 
+		DriverAdapterCPDS cpds = new DriverAdapterCPDS();
 		try {
 			cpds.setDriver("org.gjt.mm.mysql.Driver");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		cpds.setUrl("jdbc:mysql://localhost:3306/bank?useSSL=false&allowPublicKeyRetrieval=true"); 
-		cpds.setUser("root"); 
-		cpds.setPassword("1234"); 
-		SharedPoolDataSource tds = new SharedPoolDataSource(); 
-		tds.setConnectionPoolDataSource(cpds); 
-		tds.setMaxTotal(10); 
+		}
+		cpds.setUrl("jdbc:mysql://localhost:3306/bank?useSSL=false&allowPublicKeyRetrieval=true");
+		cpds.setUser("root");
+		cpds.setPassword("1234");
+		SharedPoolDataSource tds = new SharedPoolDataSource();
+		tds.setConnectionPoolDataSource(cpds);
+		tds.setMaxTotal(10);
 		tds.setMaxConnLifetimeMillis(50);
-  
 
-    return tds;
+		return tds;
 
-}
-	 
+	}
+
 	@Autowired
-	@Bean(name="sessionFactory")
+	@Bean(name = "sessionFactory")
 	public SessionFactory getSessionFactory(DataSource dataSource) {
-		
-		LocalSessionFactoryBuilder sessionBuilder = 
-				new LocalSessionFactoryBuilder(dataSource);
+
+		LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
 		sessionBuilder.addAnnotatedClass(Account.class);
 		sessionBuilder.addAnnotatedClass(Client.class);
 		sessionBuilder.addAnnotatedClass(Data.class);
@@ -116,24 +131,21 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 		sessionBuilder.setProperty("hibernate.show_sql", "true");
 		sessionBuilder.setProperty("hbm2ddl.auto", "update");
 		sessionBuilder.setProperty("hibernate.use_sql_comments", "true");
-		sessionBuilder.setProperty("hibernate.enable_lazy_load_no_trans", "true");	
+		sessionBuilder.setProperty("hibernate.enable_lazy_load_no_trans", "true");
 		return sessionBuilder.buildSessionFactory();
 	}
 
-
-	
-
 	@Autowired
 	@Bean(name = "dao")
-	public Dao<?> getDao (SessionFactory sessionFactory) {
+	public Dao<?> getDao(SessionFactory sessionFactory) {
 		return new DaoImp<Object>(sessionFactory);
 	}
 
 	@Override
 	@Bean(name = "transactionManager")
 	public PlatformTransactionManager annotationDrivenTransactionManager() {
-		HibernateTransactionManager transactionManager= new HibernateTransactionManager();
-		transactionManager.setSessionFactory( getSessionFactory(getDataSource()));
-	return transactionManager;
+		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+		transactionManager.setSessionFactory(getSessionFactory(getDataSource()));
+		return transactionManager;
 	}
 }

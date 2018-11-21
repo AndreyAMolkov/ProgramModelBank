@@ -1,6 +1,8 @@
 package demo.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,58 +17,50 @@ import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Entity(name="Account")
-@Table(name="accounts")
+@Entity(name = "Account")
+@Table(name = "accounts")
 public class Account {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private Long number;
-	
-	
-	
+
 	private Long data;
-	
+
 	private Long sum;
-	
+
 	@Autowired
 	@javax.persistence.Transient
 	private Story story;
-	
+
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "accounts_id")
 	private List<Story> histories;
-	
+
 	private Account(Long numberOfaccount, Client client, Long sum, List<Story> histories) {
 		super();
 		this.number = numberOfaccount;
 		this.sum = sum;
-		setHistories(histories); 
+		setHistories(histories);
 	}
 
-	
 	public Account() {
-		setHistories(histories); 
-		this.sum=0L;
+		setHistories(histories);
+		this.sum = 0L;
 	}
-
 
 	private Account(long inputSum) {
 		setSum(inputSum);
 	}
 
-
-
 	public Long getData() {
 		return data;
 	}
 
-
 	public void setData(Long data) {
 		this.data = data;
 	}
-
 
 	public Long getNumber() {
 		return number;
@@ -77,99 +71,97 @@ public class Account {
 	}
 
 	public Long getSum() {
-		if(sum==null)
-			this.sum=0L;
-		
+		if (sum == null)
+			this.sum = 0L;
+
 		return sum;
 	}
 
 	private void setSum(Long sum) {
-		
-		this.sum = getSum()+ sum;
+
+		this.sum = getSum() + sum;
 	}
 
-	
 	public String getHistoriesSize() {
-		if(histories == null) {
+		if (histories == null) {
 			return "empty";
 		}
 		int result = getHistories().size();
 		return String.valueOf(result);
 	}
-	
+
 	public List<Story> getHistories() {
-		if(histories == null) {
+		if (histories == null) {
 			this.histories = new ArrayList<Story>();
 		}
+		Collections.sort(histories, new Comparator<Story>() {
+			public int compare(Story s1, Story s2) {
+				return s2.getDate().compareTo(s1.getDate());
+			}
+		});
+
 		return histories;
 	}
 
 	public void setHistories(List<Story> histories) {
-		if(this.histories == null)
-			this.histories =  new ArrayList<Story>(5);
-			
-		if(histories == null) {
+		if (this.histories == null)
+			this.histories = new ArrayList<Story>(5);
+
+		if (histories == null) {
 			histories = new ArrayList<Story>(5);
-		}else {
-			histories.
-			stream().
-			forEach(e->setHistories(e));
+		} else {
+			histories.stream().forEach(e -> setHistories(e));
 		}
-		
-		this.histories=histories;
+
+		this.histories = histories;
 
 	}
-	
+
 	private boolean validateStory(Story story) {
 		Long sumOfStory = story.getSum();
-		Long sumOfAccount= getSum();
-		if(story.getOperation().toLowerCase().equals("output")) {
-			
-			Long result= sumOfAccount - sumOfStory;
-			if(result < 0)
+		Long sumOfAccount = getSum();
+		if (story.getOperation().toLowerCase().equals("output")) {
+
+			Long result = sumOfAccount - sumOfStory;
+			if (result < 0)
 				return false;
 		}
 		return true;
 	}
-	
+
 	public void setHistories(Story story) {
 
 		String nameMethod = "setHistories";
-		
+
 		Long sumOfStory = story.getSum();
-		Long sumOfAccount= getSum();
- 
-		if(validateStory(story)) {
-			if(story.getOperation().toLowerCase().equals("output")) {
+		Long sumOfAccount = getSum();
+
+		if (validateStory(story)) {
+			if (story.getOperation().toLowerCase().equals("output")) {
+				setSum(sumOfStory);
+			} else {
 				setSum(sumOfStory);
 			}
-			else {
-				setSum(sumOfStory);
-			}
-		}else {
-				
-				new Exception("ERROR " + nameMethod + " negative story, result " 
-							+ story.getOperation() + " = " + (sumOfAccount - sumOfStory));
+		} else {
+
+			new Exception("ERROR " + nameMethod + " negative story, result " + story.getOperation() + " = "
+					+ (sumOfAccount - sumOfStory));
 		}
-				
-		
+
 		story.setAccount(getNumber());
 		this.histories.add(story);
 	}
 
 	public Story getNewStory() {
-		
-		
+
 		return story;
-		
+
 	}
-	
+
 	@Override
 	public String toString() {
-		return "[" +"number=" + number + ", sum=" + sum + "]";
-				
+		return "[" + "number=" + number + ", sum=" + sum + "]";
+
 	}
-	
-	
-	
+
 }

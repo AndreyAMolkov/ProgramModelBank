@@ -1,5 +1,4 @@
 package demo.dao;
-	
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,32 +16,28 @@ import demo.model.Client;
 import demo.model.Login;
 import demo.model.Story;
 
-
-
 //@Transactional
 @Repository
 public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
-	
-	 @PersistenceContext
-	 private EntityManager em;
-	 
+
+	@PersistenceContext
+	private EntityManager em;
+
 	// @Autowired
-	 private Story storyInput;
+	private Story storyInput;
 	// @Autowired
-	 private Story storyOutput;
-	 
+	private Story storyOutput;
+
 	public Story getStory() {
 		return new Story();
 	}
 
 	@Autowired
-	 private PlatformTransactionManager transactionManager;
-	 
+	private PlatformTransactionManager transactionManager;
 
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	
 	public DaoImp() {
 		super();
 
@@ -51,18 +46,17 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	public DaoImp(SessionFactory sessionFactory) {
 		super();
 		this.sessionFactory = sessionFactory;
-		
+
 	}
 
-	
-	 @Transactional(rollbackFor=Exception.class)
-	    public void newAccount( Long id,Class<?> T)   {
-	      Client client=null;
-	    
-	         client=(Client) getById(id,T);
-	    	client.setAccounts(new Account());
+	@Transactional(rollbackFor = Exception.class)
+	public void newAccount(Long id, Class<?> T) {
+		Client client = null;
 
-	      }
+		client = (Client) getById(id, T);
+		client.setAccounts(new Account());
+
+	}
 //	 public Class<?> nameToObject(String nameObject){
 //		 Object object = null;
 //		 if(nameObject.equals((Client.class).getSimpleName()))
@@ -71,97 +65,98 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 //		 return (Class<?>) object;
 //	 }
 
-
-	  // MANDATORY: Transaction must be created before.
-	    @Transactional(propagation = Propagation.MANDATORY)
-	    public void addAmount(Long id, Long amount, Long idPartner) throws BankTransactionException {
-	        Account account = (Account) getById(id,Account.class);
-	        if (account == null) {
-	            throw new BankTransactionException("Account not found " + id);
-	        }
-	        Long newBalance = account.getSum() + amount;//-------------------------------------------------------------------
-	        if (account.getSum() + amount < 0) {
-	            throw new BankTransactionException(
-	                    "The money in the account '" + id + "' is not enough (" + account.getSum() + ")");
-	        }
-	//        Story story = account.getNewStory();
-	        if(amount >= 0) {
-	        	storyInput=getStory();
-	        	storyInput.input("transfer from"  + idPartner,amount);
-	        	account.setHistories(storyInput);
-	        }else {
-	        	storyOutput=getStory();
-	        	storyOutput.output("transfer to "  + idPartner,amount);
-	        	account.setHistories(storyOutput);
-	        }
-	        
-	    }
-	 
-	    // Do not catch BankTransactionException in this method.
-	    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
-	    public void sendMoney(Long fromAccountId, Long toAccountId, Long amount) throws BankTransactionException {
-	 
-	        addAmount(toAccountId, amount, fromAccountId);
-	        addAmount(fromAccountId, -amount, toAccountId);
-	    }
-	   
-	    @Transactional(readOnly=true, rollbackFor=javax.persistence.NoResultException.class)
-		@Override
-		public Login findLoginByname(String username){
-			
-			TypedQuery<Login> list=null;
-			list = em.createQuery(
-					  "SELECT u from Login u WHERE u.login = :username", Login.class).
-					  setParameter("username", username);		
-			
-			Login user=list.getSingleResult();
-
-			
-			return user;
+	// MANDATORY: Transaction must be created before.
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void addAmount(Long id, Long amount, Long idPartner) throws BankTransactionException {
+		Account account = (Account) getById(id, Account.class);
+		if (account == null) {
+			throw new BankTransactionException("Account not found " + id);
 		}
-
-	    @Transactional(rollbackFor=Exception.class)
-		public void addSumAccount(Long number, Long sum, String source) {
-			    	
-	    	Account account = (Account) getById(number, Account.class);
-	    	storyInput = getStory();
-			storyInput.input(source, sum);
+		Long newBalance = account.getSum() + amount;// -------------------------------------------------------------------
+		if (account.getSum() + amount < 0) {
+			throw new BankTransactionException(
+					"The money in the account '" + id + "' is not enough (" + account.getSum() + ")");
+		}
+		// Story story = account.getNewStory();
+		if (amount >= 0) {
+			storyInput = getStory();
+			storyInput.input("transfer from" + idPartner, amount);
 			account.setHistories(storyInput);
-
+		} else {
+			storyOutput = getStory();
+			storyOutput.output("transfer to " + idPartner, amount);
+			account.setHistories(storyOutput);
 		}
-		
-		@Transactional
-		public Boolean deleteAccount(Long id,Long number) {
-			Client client = (Client) getById(id,Client.class);
 
-			for (Account account :client.getAccounts()) {
-				if(account.getNumber().equals(number)) {
-					client.getAccounts().remove(account);
-					return true;
-				}
-					
-				}
-		
-		return false;
-		}
-	
-		@Transactional(readOnly=true)
-		public Boolean findLoginInBd(String login) {
+	}
 
-			if(findLoginByname(login)!=null)
+	// Do not catch BankTransactionException in this method.
+	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
+	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount) throws BankTransactionException {
+
+		addAmount(toAccountId, amount, fromAccountId);
+		addAmount(fromAccountId, -amount, toAccountId);
+	}
+
+	@Transactional(readOnly = true, rollbackFor = javax.persistence.NoResultException.class)
+	@Override
+	public Login findLoginByname(String username) {
+
+		TypedQuery<Login> list = null;
+		list = em.createQuery("SELECT u from Login u WHERE u.login = :username", Login.class).setParameter("username",
+				username);
+
+		Login user = list.getSingleResult();
+
+		return user;
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public void addSumAccount(Long number, Long sum, String source) {
+
+		Account account = (Account) getById(number, Account.class);
+		storyInput = getStory();
+		storyInput.input(source, sum);
+		account.setHistories(storyInput);
+
+	}
+
+	@Transactional
+	public Boolean deleteAccount(Long id, Long number) {
+		Client client = (Client) getById(id, Client.class);
+
+		for (Account account : client.getAccounts()) {
+			if (account.getNumber().equals(number)) {
+				client.getAccounts().remove(account);
 				return true;
-			else
-				return false;
-		}
-		
-		public Boolean ClientHaveAccount(Client client,Long numberAccount) {
-		return client.getAccounts()
-			.stream()
-			.map(e->e.getNumber())
-			.anyMatch(e->e.equals(numberAccount));
+			}
 
 		}
+
+		return false;
+	}
+
+	@Transactional(readOnly = true)
+	public Boolean findLoginInBd(String login) {
+
+		if (findLoginByname(login) != null)
+			return true;
+		else
+			return false;
+	}
+
+	public Boolean ClientHaveAccount(Client client, Long numberAccount) {
+		return client.getAccounts().stream().map(e -> e.getNumber()).anyMatch(e -> e.equals(numberAccount));
+
+	}
+	
+	@Transactional(readOnly = true)
+	public Object nameLoginClientOwner(Long idClientOwner) {
+		String name = null;
+		Client client = (Client) getById(idClientOwner, Client.class);
+		if(client !=null)
+			name= client.getLogin().getLogin();
 		
+		return name;
+	}
 }
-
-
