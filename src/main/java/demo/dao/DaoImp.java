@@ -7,7 +7,6 @@ import javax.persistence.TypedQuery;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,9 +32,6 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	}
 
 	@Autowired
-	private PlatformTransactionManager transactionManager;
-
-	@Autowired
 	private SessionFactory sessionFactory;
 
 	public DaoImp() {
@@ -57,13 +53,6 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 		client.setAccounts(new Account());
 
 	}
-//	 public Class<?> nameToObject(String nameObject){
-//		 Object object = null;
-//		 if(nameObject.equals((Client.class).getSimpleName()))
-//				 object = Client.class;
-//		 
-//		 return (Class<?>) object;
-//	 }
 
 	// MANDATORY: Transaction must be created before.
 	@Transactional(propagation = Propagation.MANDATORY)
@@ -72,12 +61,12 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 		if (account == null) {
 			throw new BankTransactionException("Account not found " + id);
 		}
-		Long newBalance = account.getSum() + amount;// -------------------------------------------------------------------
+		
 		if (account.getSum() + amount < 0) {
 			throw new BankTransactionException(
 					"The money in the account '" + id + "' is not enough (" + account.getSum() + ")");
 		}
-		// Story story = account.getNewStory();
+
 		if (amount >= 0) {
 			storyInput = getStory();
 			storyInput.input("transfer from" + idPartner, amount);
@@ -90,7 +79,6 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	}
 
-	// Do not catch BankTransactionException in this method.
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
 	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount) throws BankTransactionException {
 

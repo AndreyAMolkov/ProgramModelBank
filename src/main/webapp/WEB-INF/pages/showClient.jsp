@@ -106,7 +106,7 @@
 					<th style="width: 68px;">place</th>
 					<th style="width: 67px;">Sum</th>
 				</tr>
-				<c:forEach var="story" items="${currentAccount.getHistories()}">
+				<c:forEach var="story" items="${currentAccount.getSortHistories()}">
 					<tr>
 
 						<td>${story.getDate()}</td>

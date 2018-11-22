@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 @Entity(name = "Story")
 @Table(name = "stories")
 @Scope(value = "prototype")
-public class Story {
+public class Story implements Cloneable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -112,5 +112,10 @@ public class Story {
 		return "StoryOfAccount [id=" + id + ", account=" + account + ", date=" + date + " " + operation + " " + place
 				+ " " + sum + "]";
 	}
+	@Override
+	protected Story clone() {
+		
+		return new Story(id, account, date, operation, place,sum);
 
+	}
 }

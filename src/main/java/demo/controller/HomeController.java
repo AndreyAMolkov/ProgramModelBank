@@ -200,7 +200,7 @@ public class HomeController {
 	public ModelAndView addEditClien(@RequestParam(value = "id") Long id) {
 
 		clearSettingOfOldModel();
-		model.setViewName("ClientForm");
+		model.setViewName("clientForm");
 
 		if ((client = loadOneClient(id)) == null) {
 			handlerEvents("not found id: " + id);
@@ -217,8 +217,10 @@ public class HomeController {
 	public ModelAndView editClientForAdmin(@RequestParam(value = "id", required = false) Long id,
 			@RequestParam(value = "login.id", required = false) Long idLogin,
 			@RequestParam(value = "data.id", required = false) Long idData,
-			@RequestParam(value = "login.login") String login, @RequestParam(value = "login.password") String password,
-			@RequestParam(value = "login.role") String role, @RequestParam(value = "data.firstName") String firsName,
+			@RequestParam(value = "login.login") String login, 
+			@RequestParam(value = "login.password") String password,
+			@RequestParam(value = "login.role") String role, 
+			@RequestParam(value = "data.firstName") String firsName,
 			@RequestParam(value = "data.secondName") String secondName,
 			@RequestParam(value = "data.lastName") String lastName) throws Exception {
 
@@ -235,7 +237,7 @@ public class HomeController {
 					if (!login.equals(dao.nameLoginClientOwner(id))) {
 						handlerEvents("login isn't unique");
 						loginEntity.setPasswordEmpty();
-						model.setViewName("ClientForm");
+						model.setViewName("clientForm");
 						model.addObject("client", client);
 						return model;
 					}
@@ -243,7 +245,7 @@ public class HomeController {
 				} else {
 					handlerEvents("login isn't unique");
 					loginEntity.setPasswordEmpty();
-					model.setViewName("ClientForm");
+					model.setViewName("clientForm");
 					model.addObject("client", client);
 					return model;
 				}
@@ -268,7 +270,7 @@ public class HomeController {
 	@RequestMapping(value = "/admin/newClient", method = RequestMethod.GET)
 	public ModelAndView newClient(HttpServletRequest request) {
 		clearSettingOfOldModel();
-		model.setViewName("ClientForm");
+		model.setViewName("clientForm");
 		model.addObject("client", new Client());
 
 		return model;

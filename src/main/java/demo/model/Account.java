@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,7 +29,10 @@ public class Account {
 	private Long number;
 
 	private Long data;
-
+	
+	@Transient
+	private List<Story> sortList;
+	
 	private Long sum;
 
 	@Autowired
@@ -94,33 +99,49 @@ public class Account {
 		if (histories == null) {
 			this.histories = new ArrayList<Story>();
 		}
-		Collections.sort(histories, new Comparator<Story>() {
-			public int compare(Story s1, Story s2) {
-				return s2.getDate().compareTo(s1.getDate());
-			}
-		});
 
 		return histories;
 	}
 
-	public void setHistories(List<Story> histories) {
+	public List<Story> getSortHistories() {
+		
+		return sortHistoriesLastDateFirst(getCopy());
+	}
+
+	private List<Story> getCopy() {
+
+		return getHistories().stream()
+				.map(Story::clone)
+				.collect(Collectors.toList());
+
+	}
+
+	public List<Story> sortHistoriesLastDateFirst(List<Story> historiesOld) {
+
+		Collections.sort(historiesOld, new Comparator<Story>() {
+			public int compare(Story s1, Story s2) {
+				return s2.getDate().compareTo(s1.getDate());
+			}
+		});
+		return historiesOld;
+	}
+
+	public void setHistories(List<Story> historiesNew) {
 		if (this.histories == null)
 			this.histories = new ArrayList<Story>(5);
 
-		if (histories == null) {
-			histories = new ArrayList<Story>(5);
-		} else {
-			histories.stream().forEach(e -> setHistories(e));
+		if (historiesNew == null) {
+			historiesNew = new ArrayList<Story>(5);
 		}
 
-		this.histories = histories;
+		historiesNew.stream().forEach(e -> setHistories(e));
 
 	}
 
 	private boolean validateStory(Story story) {
 		Long sumOfStory = story.getSum();
 		Long sumOfAccount = getSum();
-		if (story.getOperation().toLowerCase().equals("output")) {
+		if (("output").equals(story.getOperation().toLowerCase())) {
 
 			Long result = sumOfAccount - sumOfStory;
 			if (result < 0)
@@ -130,18 +151,15 @@ public class Account {
 	}
 
 	public void setHistories(Story story) {
-
 		String nameMethod = "setHistories";
 
 		Long sumOfStory = story.getSum();
 		Long sumOfAccount = getSum();
 
 		if (validateStory(story)) {
-			if (story.getOperation().toLowerCase().equals("output")) {
-				setSum(sumOfStory);
-			} else {
-				setSum(sumOfStory);
-			}
+
+			setSum(sumOfStory);
+
 		} else {
 
 			new Exception("ERROR " + nameMethod + " negative story, result " + story.getOperation() + " = "
@@ -152,11 +170,11 @@ public class Account {
 		this.histories.add(story);
 	}
 
-	public Story getNewStory() {
-
-		return story;
-
-	}
+//	public Story getNewStory() {
+//
+//		return story;
+//
+//	}
 
 	@Override
 	public String toString() {

@@ -5,7 +5,6 @@ import java.util.List;
 import demo.model.Client;
 import demo.model.Login;
 
-//@Transactional
 public interface Dao<T> {
 
 	public <T> T merge(final T object);
@@ -20,7 +19,6 @@ public interface Dao<T> {
 
 	public void newAccount(Long id, Class<?> T);
 
-//	public Class<?> nameToObject(String nameObject);
 	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount) throws BankTransactionException;
 
 	public void addAmount(Long id, Long amount, Long idPartner) throws BankTransactionException;

@@ -58,7 +58,7 @@ public class Main {
 
 		Data data = new Data("Ivan", "Ivanovich", "Vasin");
 
-		Login loginC = new Login("ivan", "1234", "A");
+		Login loginC = new Login("root", "1234", "ADMIN");
 
 		Client client = new Client(loginC, data);
 
@@ -66,18 +66,18 @@ public class Main {
 		// client.setAccounts(account);
 		List<Story> history = new ArrayList<Story>(5);
 
-		Story story;
-		Story story2;
-		for (Long i = 1L; i < 3; i++) {
-			story = new Story();
-			story.input("from air", i * 344);
-			history.add(story);
-			story2 = new Story();
-			story2.output("AUSHAN", i * 34);
-			history.add(story2);
-		}
-
-		client.getAccounts().get(0).setHistories(history);
+//		Story story;
+//		Story story2;
+//		for (Long i = 1L; i < 3; i++) {
+//			story = new Story();
+//			story.input("from air", i * 344);
+//			history.add(story);
+//			story2 = new Story();
+//			story2.output("AUSHAN", i * 34);
+//			history.add(story2);
+//		}
+//
+//		client.getAccounts().get(0).setHistories(history);
 //    	  Client client =new Client();
 //    	  client =em.find(Client.class, 1L);
 //    	  System.out.println(client);
@@ -89,9 +89,9 @@ public class Main {
 		em.persist(client);
 		em.getTransaction().commit();
 
-		Client client1 = em.find(Client.class, 3L);
+//		Client client1 = em.find(Client.class, 3L);
 
-		System.out.println(client1);
+//		System.out.println(client1);
 //		  em.flush();
 //		   em.getTransaction().commit();
 //		   em.close();

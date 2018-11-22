@@ -52,7 +52,7 @@ th, td {
 				style="width: 85px;">
 		</form>
 		<form id="addAccount" action="/Bank/admin/addAccount" method="post">
-			<input name="idClient" placeholder="input client's id"
+			<input name="idClient" placeholder="id of client"
 				pattern="[0-9]{0,18}" required
 				title="number from 0 and less  999999999999999999"> <input
 				type="submit" value="addAccount" style="width: 85px;">
@@ -62,26 +62,26 @@ th, td {
 				<th colspan="7">${login.getLogin()}</th>
 			</tr>
 			<tr>
-				<td style="width: 34px;">Id client</td>
-				<td style="width: 89px;">Data</td>
-				<td style="width: 60px;">Login</td>
-				<td style="width: 60px;">Role</td>
+				<td style="width: 30px;">Id client</td>
+				<td style="width: 40px;">Data</td>
+				<td style="width: 40px;">Login</td>
+				<td style="width: 40px;">Role</td>
 
-				<td style="width: 84px;">Password</td>
-				<td style="width: 102px;">number of accounts</td>
-				<td style="width: 77px;">Count Histories</td>
+				<td style="width: 60px;">Password(this only for info)</td>
+				<td style="width: 50px;">Number of accounts</td>
+				<td style="width: 40px;">Count Histories</td>
 			</tr>
 			<c:forEach var="client" items="${clients}" varStatus="i">
 				<tr>
-					<td style="width: 34px;">${client.getId()}</td>
+					<td style="width: 30px;">${client.getId()}</td>
 
-					<td>${client.getData()}</td>
-					<td>${client.getLogin().getLogin()}</td>
-					<td>${client.getLogin().getRole()}</td>
+					<td style="width: 40px; ">${client.getData()}</td>
+					<td style="width: 40px; ">${client.getLogin().getLogin()}</td>
+					<td style="width: 40px; ">${client.getLogin().getRole()}</td>
 
-					<td>${client.getLogin().getPassword()}</td>
+					<td style="width: 60px; ">${client.getLogin().getPassword()}</td>
 
-					<td>
+					<td style="width: 50px; ">
 						<ul>
 							<c:forEach var="account" items="${client.getAccounts()}">
 
@@ -90,7 +90,7 @@ th, td {
 							</c:forEach>
 						</ul>
 					</td>
-					<td>
+					<td style="width: 40px; ">
 
 						<ul>
 							<c:forEach var="account" items="${client.getAccounts()}">
