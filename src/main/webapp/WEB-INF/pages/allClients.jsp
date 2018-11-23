@@ -67,7 +67,6 @@ th, td {
 				<td style="width: 40px;">Login</td>
 				<td style="width: 40px;">Role</td>
 
-				<td style="width: 60px;">Password(this only for info)</td>
 				<td style="width: 50px;">Number of accounts</td>
 				<td style="width: 40px;">Count Histories</td>
 			</tr>
@@ -75,13 +74,11 @@ th, td {
 				<tr>
 					<td style="width: 30px;">${client.getId()}</td>
 
-					<td style="width: 40px; ">${client.getData()}</td>
-					<td style="width: 40px; ">${client.getLogin().getLogin()}</td>
-					<td style="width: 40px; ">${client.getLogin().getRole()}</td>
+					<td style="width: 40px;">${client.getData()}</td>
+					<td style="width: 40px;">${client.getLogin().getLogin()}</td>
+					<td style="width: 40px;">${client.getLogin().getRole()}</td>
 
-					<td style="width: 60px; ">${client.getLogin().getPassword()}</td>
-
-					<td style="width: 50px; ">
+					<td style="width: 50px;">
 						<ul>
 							<c:forEach var="account" items="${client.getAccounts()}">
 
@@ -90,7 +87,7 @@ th, td {
 							</c:forEach>
 						</ul>
 					</td>
-					<td style="width: 40px; ">
+					<td style="width: 40px;">
 
 						<ul>
 							<c:forEach var="account" items="${client.getAccounts()}">

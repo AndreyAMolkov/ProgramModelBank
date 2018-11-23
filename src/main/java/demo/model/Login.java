@@ -49,6 +49,7 @@ public class Login {
 
 	@Override
 	public boolean equals(Object o) {
+		String nameMethod = "equals";
 		if (this == o)
 			return true;
 		if (!(o instanceof Login))
@@ -57,66 +58,81 @@ public class Login {
 	}
 
 	public void setAllData(String login, String password, String role) {
+		String nameMethod = "setAllData";
 		setLogin(login);
 		setPassword(password);
 		setRole(role);
 	}
 
 	public Long getId() {
+		String nameMethod = "getId";
 		return id;
 	}
 
 	public void setId(Long id) {
+		String nameMethod = "setId";
 		this.id = id;
 	}
 
 	public Client getClient() {
+		String nameMethod = "getClient";
 		return client;
 	}
 
 	public void setClient(Client client) {
+		String nameMethod = "setClient";
 		this.client = client;
 	}
 
 	public String getLogin() {
+		String nameMethod = "getLogin";
 		return login;
 	}
 
 	public void setLogin(String login) {
+		String nameMethod = "setLogin";
 		this.login = login;
 	}
 
 	public String getPassword() {
+		String nameMethod = "getPassword";
 		return password;
 	}
 
 	public void setPassword(String password) {
+		String nameMethod = "setPassword";
 		String encoded = new BCryptPasswordEncoder().encode(password);
 		this.password = encoded;
 	}
 
 	public void setPasswordEmpty() {
+		String nameMethod = "setPassword";
 		this.password = "";
 	}
 
 	public String getRole() {
+		String nameMethod = "getRole";
 		return role;
 	}
 
 	public void setRole(String role) {
+		String nameMethod = "setRole";
 		this.role = role;
 	}
 
 	public Long getIdClient() {
+		String nameMethod = "getIdClient";
 		return client.getId();
 	}
 
 	@Override
 	public String toString() {
+		String nameMethod = "toString";
 		return login + " : " + password + ", role=" + role;
 	}
 
 	public void setAllData(Long idLogin, String login, String password, String role) {
+		String nameMethod = "setAllData";
 		setId(idLogin);
 		setAllData(login, password, role);
 

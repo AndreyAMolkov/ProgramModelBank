@@ -47,9 +47,8 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	@Transactional(rollbackFor = Exception.class)
 	public void newAccount(Long id, Class<?> T) {
-		Client client = null;
-
-		client = (Client) getById(id, T);
+		String nameMethod = "newAccount";
+		Client client = (Client) getById(id, T);
 		client.setAccounts(new Account());
 
 	}
@@ -57,6 +56,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	// MANDATORY: Transaction must be created before.
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void addAmount(Long id, Long amount, Long idPartner) throws BankTransactionException {
+		String nameMethod = "addAmount";
 		Account account = (Account) getById(id, Account.class);
 		if (account == null) {
 			throw new BankTransactionException("Account not found " + id);
@@ -81,7 +81,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
 	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount) throws BankTransactionException {
-
+		String nameMethod = "sendMoney";
 		addAmount(toAccountId, amount, fromAccountId);
 		addAmount(fromAccountId, -amount, toAccountId);
 	}
@@ -89,7 +89,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	@Transactional(readOnly = true, rollbackFor = javax.persistence.NoResultException.class)
 	@Override
 	public Login findLoginByname(String username) {
-
+		String nameMethod = "findLoginByname";
 		TypedQuery<Login> list = null;
 		list = em.createQuery("SELECT u from Login u WHERE u.login = :username", Login.class).setParameter("username",
 				username);
@@ -101,7 +101,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	@Transactional(rollbackFor = Exception.class)
 	public void addSumAccount(Long number, Long sum, String source) {
-
+		String nameMethod = "addSumAccount";
 		Account account = (Account) getById(number, Account.class);
 		storyInput = getStory();
 		storyInput.input(source, sum);
@@ -112,7 +112,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	@Transactional
 	public Boolean deleteAccount(Long id, Long number) {
 		Client client = (Client) getById(id, Client.class);
-
+		String nameMethod = "deleteAccount";
 		for (Account account : client.getAccounts()) {
 			if (account.getNumber().equals(number)) {
 				client.getAccounts().remove(account);
@@ -126,7 +126,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	@Transactional(readOnly = true)
 	public Boolean findLoginInBd(String login) {
-
+		String nameMethod = "findLoginInBd";
 		if (findLoginByname(login) != null)
 			return true;
 		else
@@ -134,12 +134,14 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	}
 
 	public Boolean ClientHaveAccount(Client client, Long numberAccount) {
+		String nameMethod = "ClientHaveAccount";
 		return client.getAccounts().stream().map(e -> e.getNumber()).anyMatch(e -> e.equals(numberAccount));
 
 	}
 	
 	@Transactional(readOnly = true)
 	public Object nameLoginClientOwner(Long idClientOwner) {
+		String nameMethod = "nameLoginClientOwner";
 		String name = null;
 		Client client = (Client) getById(idClientOwner, Client.class);
 		if(client !=null)

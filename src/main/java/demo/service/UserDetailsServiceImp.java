@@ -14,7 +14,7 @@ import demo.model.Login;
 
 @Service("userDetailsService")
 public class UserDetailsServiceImp implements UserDetailsService {
-
+	
 	@Autowired
 	private Dao<?> dao;
 

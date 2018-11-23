@@ -44,7 +44,7 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 //	 public Logger logger() {
 //		 return LoggerFactory.getLogger("STDOUT");
 //	 }
-//	
+	
 	@Bean(name="loginEntity")
 	public Login getLogin() {
 		return new Login();
