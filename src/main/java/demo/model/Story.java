@@ -60,11 +60,6 @@ public class Story implements Cloneable{
 		return id;
 	}
 
-	private void setId(Long id) {
-		String nameMethod = "setId";
-		this.id = id;
-	}
-
 	public Long getAccount() {
 		String nameMethod = "getAccount";
 		return account;

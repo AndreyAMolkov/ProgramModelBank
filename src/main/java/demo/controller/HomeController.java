@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ch.qos.logback.classic.Logger;
 import demo.dao.BankTransactionException;
 import demo.dao.Dao;
 import demo.model.Account;
@@ -28,8 +28,11 @@ import demo.model.SendMoneyForm;
 
 @Controller
 public class HomeController {
-	private static Logger log =LoggerFactory.getLogger("HomeController");
+	private static Logger log =(Logger) LoggerFactory.getLogger("HomeController");
 
+//	@Autowired
+//	private Logger log;
+//	
 	@Autowired
 	private ModelAndView model;
 
@@ -74,6 +77,7 @@ public class HomeController {
 	@RequestMapping("/admin/listAll")
 	public ModelAndView handleRequest() throws Exception {
 		String nameMethod = "handleRequest";
+		log.debug(nameMethod,idPrincipal);
 		clearSettingOfOldModel();
 		loadAllClients();
 		return model;
@@ -84,11 +88,14 @@ public class HomeController {
 	public ModelAndView showClientHistoryForAdmin(@RequestParam(value = "idClient") Long id,
 			@RequestParam(value = "idAccount", required = false) Long idAccount) {
 		String nameMethod = "showClientHistoryForAdmin";
+		log.debug(nameMethod,idPrincipal,"idClient=" + id +"idAccount = " + idAccount);
 		clearSettingOfOldModel();
 		loadOneClient(id);
 
 		if (loadCurrentAccount(idAccount) == null) {
-			handlerEvents("not found card: " + idAccount);
+			String msg= "not found card: " + idAccount;
+			handlerEvents(msg);
+			log.warn(nameMethod,idPrincipal,msg);
 		}
 
 		model.setViewName("showClientAdmin");
@@ -101,11 +108,14 @@ public class HomeController {
 	public ModelAndView showClientHistory(@RequestParam(value = "idClient") Long id,
 			@RequestParam(value = "idAccount", required = false) Long idAccount) {
 		String nameMethod = "showClientHistory";
+		log.debug(nameMethod,idPrincipal,"idClient=" + id + "idAccount = " + idAccount);
 		model.setViewName("showClient");
 		clearSettingOfOldModel();
 		loadOneClient(id);
 		if (loadCurrentAccount(idAccount) == null) {
-			handlerEvents("not found card: " + idAccount);
+			String msg = "not found card: " + idAccount;
+			handlerEvents(msg);
+			log.debug(nameMethod,idPrincipal,msg);
 		}
 
 		return model;
@@ -123,20 +133,25 @@ public class HomeController {
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public ModelAndView home() {
 		String nameMethod = "home";
+		
 		updateDatePrincipal();
+		log.debug(nameMethod,idPrincipal);
 		clearSettingOfOldModel();
 		if ("ROLE_CLIENT".equals(rolePrincipal)) {
 			loadOneClient(idPrincipal);
+			log.debug(nameMethod,idPrincipal,rolePrincipal);
 			model.setViewName("showClient");
 			return model;
 		}
 
 		if ("ROLE_ADMIN".equals(rolePrincipal)) {
+			log.debug(nameMethod,idPrincipal,rolePrincipal);
 			model.setViewName("allClients");
 			loadAllClients();
 			return model;
 		}
 		if ("ROLE_CASHIER".equals(rolePrincipal)) {
+			log.debug(nameMethod,idPrincipal,rolePrincipal);
 			model.setViewName("cashier");
 			return model;
 		}
@@ -153,7 +168,9 @@ public class HomeController {
 			loadOneClient(id);
 			model.setViewName("showClientAdmin");
 		} catch (NullPointerException e) {
-			handlerEvents("not found id: " + id);
+			String msg="not found id: " + id;
+			handlerEvents(msg);
+			log.warn(nameMethod,idPrincipal,msg);
 			loadAllClients();
 
 		}
@@ -165,10 +182,13 @@ public class HomeController {
 	@RequestMapping(value = "/admin/deleteClient", method = { RequestMethod.POST })
 	public ModelAndView deleteClientForAdmin(@RequestParam(value = "id") Long id) {
 		String nameMethod = "deleteClientForAdmin";
+		log.debug(nameMethod,idPrincipal,"idClient=" + id);
 		try {
 			dao.remove(id, Client.class);
 		} catch (IllegalArgumentException e) {
-			handlerEvents("not found id: " + id);
+			String msg="not found id: " + id;
+			handlerEvents(msg);
+			log.warn(nameMethod,idPrincipal,msg);
 		}
 
 		loadAllClients();
@@ -181,11 +201,13 @@ public class HomeController {
 	public ModelAndView showClientForAdmin(@RequestParam(value = "id") Long id,
 			@RequestParam(value = "idAccount", required = false) Long idAccount) {
 		String nameMethod = "showClientForAdmin";
+		log.debug(nameMethod,idPrincipal,"idClient=" + id + "idAccount = " + idAccount);
 		clearSettingOfOldModel();
 		model.setViewName("showClientAdmin");
 		if (loadOneClient(id) == null) {
-			handlerEvents("not found id: " + id);
-			loadAllClients();
+			String msg="not found id: " + id;
+			handlerEvents(msg);
+			log.warn(nameMethod,idPrincipal,msg);
 			return model;
 		}
 
@@ -368,6 +390,7 @@ public class HomeController {
 			@RequestParam(value = "amount") Long amount) {
 		String nameMethod = "processSendMoney";
 		clearSettingOfOldModel();
+		log.debug(nameMethod,idPrincipal,"fromAccountId=" + fromAccountId + "toAccountId = " + toAccountId + "amount = " + amount);
 		Client client = loadOneClient(id);
 
 		if (!dao.ClientHaveAccount(client, fromAccountId)) {
@@ -405,6 +428,7 @@ public class HomeController {
 
 			this.rolePrincipal = ((principal.getAuthorities().toArray())[0]).toString();
 		}
+		log.debug(nameMethod,idPrincipal,"idPrincipal=" + idPrincipal + "rolePrincipal = " + rolePrincipal);
 	}
 
 	// all setting of model, which need clean before starting new

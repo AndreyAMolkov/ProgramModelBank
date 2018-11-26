@@ -7,6 +7,7 @@ import demo.model.Login;
 
 public interface Dao<T> {
 
+	@SuppressWarnings("hiding")
 	public <T> T merge(final T object);
 
 	public void remove(Long id, Class<?> T);

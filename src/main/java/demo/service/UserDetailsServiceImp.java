@@ -1,5 +1,7 @@
 package demo.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +16,7 @@ import demo.model.Login;
 
 @Service("userDetailsService")
 public class UserDetailsServiceImp implements UserDetailsService {
-	
+	private static Logger log =LoggerFactory.getLogger("UserDetailsServiceImp");
 	@Autowired
 	private Dao<?> dao;
 
@@ -22,8 +24,8 @@ public class UserDetailsServiceImp implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		String nameMethod = "loadUserByUsername";
-		System.out.println(nameMethod + "--------------------------------    " + " check : " + username);
-
+		log.debug(nameMethod, username);
+		
 		Login login = (Login) dao.findLoginByname(username);
 
 		UserBuilder builder = null;

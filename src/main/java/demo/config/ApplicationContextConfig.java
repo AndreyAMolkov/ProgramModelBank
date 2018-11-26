@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.hibernate.SessionFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import ch.qos.logback.classic.Logger;
 import demo.dao.Dao;
 import demo.dao.DaoImp;
 import demo.model.Account;
@@ -40,10 +42,10 @@ import demo.model.Story;
 @Import({ FormLoginSecurityConfig.class })
 public class ApplicationContextConfig implements TransactionManagementConfigurer {
 
-//	 @Bean
-//	 public Logger logger() {
-//		 return LoggerFactory.getLogger("STDOUT");
-//	 }
+	 @Bean(name="log")
+	 public Logger logger() {
+		 return (Logger) LoggerFactory.getLogger("STDOUT");
+	 }
 	
 	@Bean(name="loginEntity")
 	public Login getLogin() {

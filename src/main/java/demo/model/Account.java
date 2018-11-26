@@ -43,20 +43,9 @@ public class Account {
 	@JoinColumn(name = "accounts_id")
 	private List<Story> histories;
 
-	private Account(Long numberOfaccount, Client client, Long sum, List<Story> histories) {
-		super();
-		this.number = numberOfaccount;
-		this.sum = sum;
-		setHistories(histories);
-	}
-
 	public Account() {
 		setHistories(histories);
 		this.sum = 0L;
-	}
-
-	private Account(long inputSum) {
-		setSum(inputSum);
 	}
 
 	public Long getData() {

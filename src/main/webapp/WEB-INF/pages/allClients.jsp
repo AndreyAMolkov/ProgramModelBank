@@ -57,18 +57,16 @@ th, td {
 				title="number from 0 and less  999999999999999999"> <input
 				type="submit" value="addAccount" style="width: 85px;">
 		</form>
-		<table>
-			<tr>
-				<th colspan="7">${login.getLogin()}</th>
-			</tr>
+		<table border="1" style="width: 768px;">
+
 			<tr>
 				<td style="width: 30px;">Id client</td>
 				<td style="width: 40px;">Data</td>
 				<td style="width: 40px;">Login</td>
 				<td style="width: 40px;">Role</td>
 
-				<td style="width: 50px;">Number of accounts</td>
-				<td style="width: 40px;">Count Histories</td>
+				<td style="width: 40px;">Number of accounts</td>
+				<td style="width: 30px;">Count Histories</td>
 			</tr>
 			<c:forEach var="client" items="${clients}" varStatus="i">
 				<tr>
@@ -78,7 +76,7 @@ th, td {
 					<td style="width: 40px;">${client.getLogin().getLogin()}</td>
 					<td style="width: 40px;">${client.getLogin().getRole()}</td>
 
-					<td style="width: 50px;">
+					<td style="width: 40px;">
 						<ul>
 							<c:forEach var="account" items="${client.getAccounts()}">
 
@@ -87,7 +85,7 @@ th, td {
 							</c:forEach>
 						</ul>
 					</td>
-					<td style="width: 40px;">
+					<td style="width: 30px;">
 
 						<ul>
 							<c:forEach var="account" items="${client.getAccounts()}">

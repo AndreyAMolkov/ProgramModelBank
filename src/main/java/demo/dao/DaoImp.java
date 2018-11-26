@@ -5,7 +5,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,7 @@ import demo.model.Story;
 //@Transactional
 @Repository
 public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
-
+//	private static Logger log =LoggerFactory.getLogger("DaoImp");
 	@PersistenceContext
 	private EntityManager em;
 
@@ -31,9 +30,6 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 		return new Story();
 	}
 
-	@Autowired
-	private SessionFactory sessionFactory;
-
 	public DaoImp() {
 		super();
 
@@ -41,7 +37,6 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	public DaoImp(SessionFactory sessionFactory) {
 		super();
-		this.sessionFactory = sessionFactory;
 
 	}
 
