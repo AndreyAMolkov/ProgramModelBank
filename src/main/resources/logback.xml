@@ -14,8 +14,8 @@
 		</encoder>
 	</appender>
 
-
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+
 		<file>${DEV_HOME}/logBank.log</file>
 		<append>true</append>
 		<!-- set immediateFlush to false for much higher logging throughput -->
@@ -23,8 +23,7 @@
 		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder 
 			by default -->
 		<encoder>
-			<pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} %-4relative [%thread] %-5level
-				%logger{35} - %msg%n</pattern>
+			<pattern>%-30(%d{yyyy-MM-dd_HH:mm:ss.SSS} [%thread]) %-5level %logger{32} - %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -33,7 +32,7 @@
 		<file>${DEV_HOME}/hibernate_log.log</file>
 		<encoder
 			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<Pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} [%thread] %-5level %logger{36} -
+			<Pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} [%thread] %-3level %logger{36} -
 				%msg%n
 			</Pattern>
 		</encoder>
@@ -58,14 +57,14 @@
 	<logger name="org.hibernate" level="DEBUG">
 		<appender-ref ref="FILE_Hibernate" />
 	</logger>
-	<logger name="demo.controller.HomeController" level="DEBUG">
+
+	<logger name="demo" level="DEBUG">
+		<appender-ref ref="FILE_Hibernate" />
+		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</logger>
 
-	<root level="INFO">
 
-		<appender-ref ref="STDOUT" />
-	</root>
-
+	<!-- <root level="debag"> <appender-ref ref="STDOUT" /> </root> -->
 
 </configuration>

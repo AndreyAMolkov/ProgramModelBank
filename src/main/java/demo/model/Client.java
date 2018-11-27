@@ -60,17 +60,16 @@ public class Client {
 	}
 
 	public Long getId() {
-		String nameMethod = "getId";
+//		String nameMethod = "getId";
+//		log.info(nameMethod + Constants.ONE_PARAMETERS,"id",id);
 		return id;
 	}
 
 	public void setId(Long id) {
-		String nameMethod = "setId";
 		this.id = id;
 	}
 
 	public Data getData() {
-		String nameMethod = "getData";
 		if (data == null) {
 			setData(new Data());
 		}
@@ -78,7 +77,6 @@ public class Client {
 	}
 
 	public void setData(Data data) {
-		String nameMethod = "setData";
 		if (data == null) {
 			data = new Data();
 		}
@@ -88,7 +86,6 @@ public class Client {
 	}
 
 	public Login getLogin() {
-		String nameMethod = "getLogin";
 		if (login == null) {
 			setLogin(new Login());
 		}
@@ -96,7 +93,6 @@ public class Client {
 	}
 
 	public void setLogin(Login login) {
-		String nameMethod = "setLogin";
 		if (login == null) {
 			login = new Login();
 		}
@@ -105,7 +101,6 @@ public class Client {
 	}
 
 	public List<Account> getAccounts() {
-		String nameMethod = "getAccounts";
 		if (accounts == null) {
 			this.accounts = new ArrayList<Account>();
 		}
@@ -113,16 +108,15 @@ public class Client {
 	}
 
 	public void setAccounts(List<Account> accounts) {
-		String nameMethod = "setAccounts";
 		if (accounts == null) {
 			accounts = new ArrayList<Account>();
 		}
 		accounts.forEach(a -> a.setData(getData().getId()));
+		
 		this.accounts = accounts;
 	}
 
 	public void setAccounts(Account account) {
-		String nameMethod = "setAccounts";
 		if (account == null) {
 			account = new Account();
 		}
@@ -131,29 +125,24 @@ public class Client {
 	}
 
 	public String getNameFromData() {
-		String nameMethod = "getNameFromData";
 		return nameFromData;
 	}
 
 	public void setNameFromData(String nameFromData) {
-		String nameMethod = "setNameFromData";
 		this.nameFromData = nameFromData;
 	}
 
 	@Override
 	public String toString() {
-		String nameMethod = "toString";
 		return "Client [id=" + id + ", dataOfClient=" + data + ", loginOfClient=" + login + ", accounts=" + accounts
 				+ "]";
 	}
 
 	public Story getStory() {
-		String nameMethod = "getStory";
 		return story;
 	}
 
 	public void setStory(Story story) {
-		String nameMethod = "setStory";
 		this.story = story;
 	}
 

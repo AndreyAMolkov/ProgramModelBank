@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Entity(name = "Account")
 @Table(name = "accounts")
 public class Account {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -49,27 +48,22 @@ public class Account {
 	}
 
 	public Long getData() {
-		String nameMethod = "getData";
 		return data;
 	}
 
 	public void setData(Long data) {
-		String nameMethod = "setData";
 		this.data = data;
 	}
 
 	public Long getNumber() {
-		String nameMethod = "getNumber";
 		return number;
 	}
 
 	public void setNumber(Long numberOfaccount) {
-		String nameMethod = "setNumber";
 		this.number = numberOfaccount;
 	}
 
 	public Long getSum() {
-		String nameMethod = "getSum";
 		if (sum == null)
 			this.sum = 0L;
 
@@ -77,12 +71,10 @@ public class Account {
 	}
 
 	private void setSum(Long sum) {
-		String nameMethod = "setSum";
 		this.sum = getSum() + sum;
 	}
 
 	public String getHistoriesSize() {
-		String nameMethod = "getHistoriesSize";
 		if (histories == null) {
 			return "empty";
 		}
@@ -91,7 +83,6 @@ public class Account {
 	}
 
 	public List<Story> getHistories() {
-		String nameMethod = "getHistories";
 		if (histories == null) {
 			this.histories = new ArrayList<Story>();
 		}
@@ -100,12 +91,10 @@ public class Account {
 	}
 
 	public List<Story> getSortHistories() {
-		String nameMethod = "getSortHistories";
 		return sortHistoriesLastDateFirst(getCopy());
 	}
 
 	private List<Story> getCopy() {
-		String nameMethod = "getCopy";
 		return getHistories().stream()
 				.map(Story::clone)
 				.collect(Collectors.toList());
@@ -113,7 +102,6 @@ public class Account {
 	}
 
 	public List<Story> sortHistoriesLastDateFirst(List<Story> historiesOld) {
-		String nameMethod = "sortHistoriesLastDateFirst";
 		Collections.sort(historiesOld, new Comparator<Story>() {
 			public int compare(Story s1, Story s2) {
 				return s2.getDate().compareTo(s1.getDate());
@@ -123,7 +111,6 @@ public class Account {
 	}
 
 	public void setHistories(List<Story> historiesNew) {
-		String nameMethod = "setHistories";
 		if (this.histories == null)
 			this.histories = new ArrayList<Story>(5);
 
@@ -136,7 +123,6 @@ public class Account {
 	}
 
 	private boolean validateStory(Story story) {
-		String nameMethod = "validateStory";
 		Long sumOfStory = story.getSum();
 		Long sumOfAccount = getSum();
 		if (("output").equals(story.getOperation().toLowerCase())) {
@@ -170,7 +156,7 @@ public class Account {
 
 	@Override
 	public String toString() {
-		String nameMethod = "toString";
+
 		return "[" + "number=" + number + ", sum=" + sum + "]";
 
 	}

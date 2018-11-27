@@ -17,14 +17,13 @@ import demo.model.Data;
 import demo.model.Login;
 import demo.model.Story;
 
+//	you can use for fast setting your database (for right structure tables)
 public class Main {
 
 	public static void main(String[] args) {
-//		  SessionFactory sessionFactory =
-//				       new Configuration()
-//			            .configure()
-//			            .buildSessionFactory();
 
+		
+		
 		DriverAdapterCPDS cpds = new DriverAdapterCPDS();
 		try {
 			cpds.setDriver("org.gjt.mm.mysql.Driver");

@@ -13,8 +13,7 @@ import org.springframework.context.annotation.Scope;
 @Entity(name = "Story")
 @Table(name = "stories")
 @Scope(value = "prototype")
-public class Story implements Cloneable{
-
+public class Story implements Cloneable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -40,7 +39,6 @@ public class Story implements Cloneable{
 	}
 
 	public void input(String place, Long sum) {
-		String nameMethod = "input";
 		setDate(date);
 		setOperation("Input");
 		setPlace(place);
@@ -48,7 +46,6 @@ public class Story implements Cloneable{
 	}
 
 	public void output(String place, Long sum) {
-		String nameMethod = "output";
 		setDate(date);
 		setOperation("Output");
 		setPlace(place);
@@ -56,27 +53,22 @@ public class Story implements Cloneable{
 	}
 
 	public Long getId() {
-		String nameMethod = "getId";
 		return id;
 	}
 
 	public Long getAccount() {
-		String nameMethod = "getAccount";
 		return account;
 	}
 
 	protected void setAccount(Long account) {
-		String nameMethod = "setAccount";
 		this.account = account;
 	}
 
 	public LocalDateTime getDate() {
-		String nameMethod = "getDate";
 		return date;
 	}
 
 	private void setDate(LocalDateTime date) {
-		String nameMethod = "setDate";
 		if (date == null) {
 			date = LocalDateTime.now();
 		}
@@ -84,47 +76,40 @@ public class Story implements Cloneable{
 	}
 
 	public String getOperation() {
-		String nameMethod = "getOperation";
 		return operation;
 	}
 
 	private void setOperation(String operation) {
-		String nameMethod = "setOperation";
 		this.operation = operation;
 	}
 
 	public String getPlace() {
-		String nameMethod = "getPlace";
 		return place;
 	}
 
 	private void setPlace(String place) {
-		String nameMethod = "setPlace";
 		this.place = place;
 	}
 
 	public Long getSum() {
-		String nameMethod = "getSum";
 		if (this.sum == null)
 			this.sum = 0L;
 		return sum;
 	}
 
 	private void setSum(Long sum) {
-		String nameMethod = "setSum";
 		this.sum = getSum() + sum;
 	}
 
 	@Override
 	public String toString() {
-		String nameMethod = "toString";
 		return "StoryOfAccount [id=" + id + ", account=" + account + ", date=" + date + " " + operation + " " + place
 				+ " " + sum + "]";
 	}
+
 	@Override
 	protected Story clone() {
-		String nameMethod = "clone";
-		return new Story(id, account, date, operation, place,sum);
+		return new Story(id, account, date, operation, place, sum);
 
 	}
 }
