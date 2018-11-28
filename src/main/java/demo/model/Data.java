@@ -25,7 +25,6 @@ public class Data {
 	private String lastName;
 
 	public Data() {
-		;// empty
 	}
 
 	public Data(Long id, Client client, String firstName, String secondName, String lastName) {

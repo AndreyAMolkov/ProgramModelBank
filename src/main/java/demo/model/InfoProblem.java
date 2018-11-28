@@ -27,8 +27,6 @@ public class InfoProblem {
 	}
 
 	public InfoProblem() {
-
-		// TODO Auto-generated constructor stub
 	}
 
 }

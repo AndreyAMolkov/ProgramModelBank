@@ -54,7 +54,10 @@ public class Login {
 			return false;
 		return id != null && id.equals(((Login) o).id);
 	}
-
+	@Override
+	public int hashCode() {
+		return 33;
+	}
 	public void setAllData(String login, String password, String role) {
 		setLogin(login);
 		setPassword(password);

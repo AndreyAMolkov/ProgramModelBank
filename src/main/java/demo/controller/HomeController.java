@@ -61,12 +61,12 @@ public class HomeController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView start() {
-		model.setViewName("redirect:" + "home");
+		model.setViewName(Constants.REDIRECT + "home");
 		return model;
 	}
 
 	@RequestMapping("/admin/listAll")
-	public ModelAndView handleRequest() throws Exception {
+	public ModelAndView handleRequest() {
 		String nameMethod = "handleRequest";
 		log.debug(nameMethod + Constants.TWO_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal, Constants.PRINCIPAL_ROLE,
 				rolePrincipal);
@@ -245,7 +245,7 @@ public class HomeController {
 			@RequestParam(value = "login.login") String login, @RequestParam(value = "login.password") String password,
 			@RequestParam(value = "login.role") String role, @RequestParam(value = "data.firstName") String firsName,
 			@RequestParam(value = "data.secondName") String secondName,
-			@RequestParam(value = "data.lastName") String lastName) throws Exception {
+			@RequestParam(value = "data.lastName") String lastName){
 		String nameMethod = "editClientForAdmin";
 		log.debug(nameMethod + Constants.SEVEN_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal,
 				Constants.PRINCIPAL_ROLE, rolePrincipal, "idLogin", idLogin, "idData", idData, "firstName", firsName,
@@ -394,11 +394,9 @@ public class HomeController {
 			@RequestParam(value = "amount") Long amount) {
 		String nameMethod = "processSendMoney";
 		clearSettingOfOldModel();
-		log.debug(nameMethod + "idPrincipal " + idPrincipal + "fromAccountId=" + fromAccountId + "toAccountId = "
-				+ toAccountId + "amount = " + amount);
 		log.debug(nameMethod + Constants.FIVE_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal, Constants.PRINCIPAL_ROLE, rolePrincipal, 
 				Constants.CLIENT_ID, id, Constants.ACCOUNT_ID, toAccountId, "fromAccountId", fromAccountId);
-		Client client = loadOneClient(id);
+		client = loadOneClient(id);
 
 		if (!dao.ClientHaveAccount(client, fromAccountId)) {
 			handlerEvents("it's not your account");
@@ -464,7 +462,7 @@ public class HomeController {
 	}
 
 	private Client loadOneClient(Long id) {
-		Client client = (Client) dao.getById(id, Client.class);
+		client = (Client) dao.getById(id, Client.class);
 		model.addObject("client", client);
 		return client;
 	}

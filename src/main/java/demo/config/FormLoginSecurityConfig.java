@@ -33,7 +33,7 @@ public class FormLoginSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+	public void configureGlobal(AuthenticationManagerBuilder auth){
 		auth.authenticationProvider(authProvider());
 	}
 

@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.hibernate.SessionFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import ch.qos.logback.classic.Logger;
+import demo.constant.Constants;
 import demo.dao.Dao;
 import demo.dao.DaoImp;
 import demo.model.Account;
@@ -39,11 +42,7 @@ import demo.model.Story;
 @EnableTransactionManagement
 @Import({ FormLoginSecurityConfig.class })
 public class ApplicationContextConfig implements TransactionManagementConfigurer {
-//
-//	 @Bean(name="log")
-//	 public Logger logger() {
-//		 return (Logger) LoggerFactory.getLogger("STDOUT");
-//	 }
+	private static Logger log = (Logger) LoggerFactory.getLogger("demo.controller.ApplicationContextConfig");
 	
 	@Bean(name="loginEntity")
 	public Login getLogin() {
@@ -97,13 +96,13 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 	@Bean(name = "dataSourse")
 	@Primary
 	public DataSource getDataSource() {
-
+		String nameMethod ="DataSource";
 		DriverAdapterCPDS cpds = new DriverAdapterCPDS();
 		try {
 			cpds.setDriver("org.gjt.mm.mysql.Driver");
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			log.error(nameMethod + Constants.ONE_PARAMETERS,"Error",e);
 		}
 		cpds.setUrl("jdbc:mysql://localhost:3306/bank?useSSL=false&allowPublicKeyRetrieval=true");
 		cpds.setUser("root");

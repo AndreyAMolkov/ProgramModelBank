@@ -35,7 +35,6 @@ public class Story implements Cloneable {
 	}
 
 	public Story() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public void input(String place, Long sum) {

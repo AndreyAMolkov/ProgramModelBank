@@ -49,7 +49,6 @@ public class Client {
 	}
 
 	public Client() {
-//		this.accounts= new TreeSet<Account>();
 	}
 
 	public Client(Long id, Data data, Login login) {
@@ -60,8 +59,6 @@ public class Client {
 	}
 
 	public Long getId() {
-//		String nameMethod = "getId";
-//		log.info(nameMethod + Constants.ONE_PARAMETERS,"id",id);
 		return id;
 	}
 
@@ -102,14 +99,14 @@ public class Client {
 
 	public List<Account> getAccounts() {
 		if (accounts == null) {
-			this.accounts = new ArrayList<Account>();
+			this.accounts = new ArrayList<>();
 		}
 		return accounts;
 	}
 
 	public void setAccounts(List<Account> accounts) {
 		if (accounts == null) {
-			accounts = new ArrayList<Account>();
+			accounts = new ArrayList<>();
 		}
 		accounts.forEach(a -> a.setData(getData().getId()));
 		

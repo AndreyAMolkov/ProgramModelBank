@@ -1,8 +1,5 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.EntityManager;
 
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
@@ -17,18 +14,15 @@ import demo.model.Data;
 import demo.model.Login;
 import demo.model.Story;
 
-//	you can use for fast setting your database (for right structure tables)
+//	you can use for fast setting your database (for properly  structure tables)
 public class Main {
 
 	public static void main(String[] args) {
 
-		
-		
 		DriverAdapterCPDS cpds = new DriverAdapterCPDS();
 		try {
 			cpds.setDriver("org.gjt.mm.mysql.Driver");
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		cpds.setUrl("jdbc:mysql://localhost:3306/bank?useSSL=false");
@@ -61,42 +55,9 @@ public class Main {
 
 		Client client = new Client(loginC, data);
 
-		// Account account = new Account(5000L);
-		// client.setAccounts(account);
-		List<Story> history = new ArrayList<Story>(5);
-
-//		Story story;
-//		Story story2;
-//		for (Long i = 1L; i < 3; i++) {
-//			story = new Story();
-//			story.input("from air", i * 344);
-//			history.add(story);
-//			story2 = new Story();
-//			story2.output("AUSHAN", i * 34);
-//			history.add(story2);
-//		}
-//
-//		client.getAccounts().get(0).setHistories(history);
-//    	  Client client =new Client();
-//    	  client =em.find(Client.class, 1L);
-//    	  System.out.println(client);
-//    	  client.getDataOfClient().setAllData("sadfdsfdsf","Rdsfds", "dsfgnbkm");
-//    	  client.getLoginOfClient().setAllData("try", "123fdg4", "USEfgR");
-
-//    	  client.setDataOfClient(data);
-
 		em.persist(client);
 		em.getTransaction().commit();
 
-//		Client client1 = em.find(Client.class, 3L);
-
-//		System.out.println(client1);
-//		  em.flush();
-//		   em.getTransaction().commit();
-//		   em.close();
-
-		session.close();
-		sessionFactory.close();
 		System.out.println("End of main");
 	}
 

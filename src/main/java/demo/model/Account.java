@@ -84,7 +84,7 @@ public class Account {
 
 	public List<Story> getHistories() {
 		if (histories == null) {
-			this.histories = new ArrayList<Story>();
+			this.histories = new ArrayList<>();
 		}
 
 		return histories;
@@ -112,13 +112,13 @@ public class Account {
 
 	public void setHistories(List<Story> historiesNew) {
 		if (this.histories == null)
-			this.histories = new ArrayList<Story>(5);
+			this.histories = new ArrayList<>(5);
 
 		if (historiesNew == null) {
-			historiesNew = new ArrayList<Story>(5);
+			historiesNew = new ArrayList<>(5);
 		}
 
-		historiesNew.stream().forEach(e -> setHistories(e));
+		historiesNew.stream().forEach(e->setHistories(e));
 
 	}
 
@@ -135,19 +135,11 @@ public class Account {
 	}
 
 	public void setHistories(Story story) {
-		String nameMethod = "setHistories";
 		Long sumOfStory = story.getSum();
-		Long sumOfAccount = getSum();
 
 		if (validateStory(story)) {
-
 			setSum(sumOfStory);
-
-		} else {
-
-			new Exception("ERROR " + nameMethod + " negative story, result " + story.getOperation() + " = "
-					+ (sumOfAccount - sumOfStory));
-		}
+		} 
 
 		story.setAccount(getNumber());
 		this.histories.add(story);
@@ -156,9 +148,7 @@ public class Account {
 
 	@Override
 	public String toString() {
-
 		return "[" + "number=" + number + ", sum=" + sum + "]";
-
 	}
 
 }

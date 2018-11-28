@@ -20,9 +20,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 	@PersistenceContext
 	private EntityManager em;
 
-	// @Autowired
 	private Story storyInput;
-	// @Autowired
 	private Story storyOutput;
 
 	public Story getStory() {
@@ -83,9 +81,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 		list = em.createQuery("SELECT u from Login u WHERE u.login = :username", Login.class).setParameter("username",
 				username);
 
-		Login user = list.getSingleResult();
-
-		return user;
+		return list.getSingleResult();
 	}
 
 	@Transactional(rollbackFor = Exception.class)

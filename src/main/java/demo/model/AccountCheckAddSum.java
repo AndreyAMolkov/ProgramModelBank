@@ -6,12 +6,12 @@ import demo.dao.Dao;
 
 public class AccountCheckAddSum {
 
-	private long IdAccountTo;
-	private long IdClientTo;
+	private long idAccountTo;
+	private long idClientTo;
 	private String nameOfClientTo;
 	private long amountClientAccountTo;
-	private long IdAccountFrom;
-	private long IdClientFrom;
+	private long idAccountFrom;
+	private long idClientFrom;
 	private String nameOfClientFrom;
 	private long amountClientAccountFrom;
 	private Boolean denied;
@@ -24,12 +24,12 @@ public class AccountCheckAddSum {
 	}
 
 	public long getIdAccountTo() {
-		return IdAccountTo;
+		return idAccountTo;
 	}
 
 	public void setIdAccountTo(long idAccountTo) {
 
-		IdAccountTo = idAccountTo;
+		this.idAccountTo = idAccountTo;
 		Account account = (Account) dao.getById(idAccountTo, Account.class);
 
 		String fullName = "NOT FOUND";
@@ -51,11 +51,11 @@ public class AccountCheckAddSum {
 	}
 
 	public long getIdClientTo() {
-		return IdClientTo;
+		return idClientTo;
 	}
 
 	public void setIdClientTo(long idClientTo) {
-		IdClientTo = idClientTo;
+		this.idClientTo = idClientTo;
 	}
 
 	public String getNameOfClientTo() {
@@ -67,19 +67,19 @@ public class AccountCheckAddSum {
 	}
 
 	public long getIdAccountFrom() {
-		return IdAccountFrom;
+		return idAccountFrom;
 	}
 
 	public void setIdAccountFrom(long idAccountFrom) {
-		IdAccountFrom = idAccountFrom;
+		this.idAccountFrom = idAccountFrom;
 	}
 
 	public long getIdClientFrom() {
-		return IdClientFrom;
+		return idClientFrom;
 	}
 
 	public void setIdClientFrom(long idClientFrom) {
-		IdClientFrom = idClientFrom;
+		this.idClientFrom = idClientFrom;
 	}
 
 	public String getNameOfClientFrom() {
