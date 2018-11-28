@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import demo.constant.Constants;
+
 @Configuration
 @EnableWebSecurity
 public class FormLoginSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -44,7 +46,7 @@ public class FormLoginSecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated()
 					.and()
 				.formLogin()
-				.loginPage("/login").loginProcessingUrl("/login").permitAll()
+				.loginPage(Constants.PAGE_LOGIN).loginProcessingUrl("/login").permitAll()
 				.failureUrl("/login?error=true")
 				.defaultSuccessUrl("/home")
 					.and()

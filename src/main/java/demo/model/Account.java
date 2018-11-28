@@ -2,7 +2,6 @@ package demo.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,10 +27,10 @@ public class Account {
 	private Long number;
 
 	private Long data;
-	
+
 	@Transient
 	private List<Story> sortList;
-	
+
 	private Long sum;
 
 	@Autowired
@@ -95,18 +94,12 @@ public class Account {
 	}
 
 	private List<Story> getCopy() {
-		return getHistories().stream()
-				.map(Story::clone)
-				.collect(Collectors.toList());
+		return getHistories().stream().map(Story::storyForSort).collect(Collectors.toList());
 
 	}
 
 	public List<Story> sortHistoriesLastDateFirst(List<Story> historiesOld) {
-		Collections.sort(historiesOld, new Comparator<Story>() {
-			public int compare(Story s1, Story s2) {
-				return s2.getDate().compareTo(s1.getDate());
-			}
-		});
+		Collections.sort(historiesOld,(story1, story2)->story2.getDate().compareTo(story1.getDate()));
 		return historiesOld;
 	}
 
@@ -118,20 +111,22 @@ public class Account {
 			historiesNew = new ArrayList<>(5);
 		}
 
-		historiesNew.stream().forEach(e->setHistories(e));
+		historiesNew.stream().forEach(this::setHistories);
 
 	}
 
 	private boolean validateStory(Story story) {
 		Long sumOfStory = story.getSum();
 		Long sumOfAccount = getSum();
-		if (("output").equals(story.getOperation().toLowerCase())) {
+		Boolean flag = true;
+
+		if (("output").equals(story.getOperation())) {
 
 			Long result = sumOfAccount - sumOfStory;
 			if (result < 0)
-				return false;
+				flag = false;
 		}
-		return true;
+		return flag;
 	}
 
 	public void setHistories(Story story) {
@@ -139,12 +134,11 @@ public class Account {
 
 		if (validateStory(story)) {
 			setSum(sumOfStory);
-		} 
+		}
 
 		story.setAccount(getNumber());
 		this.histories.add(story);
 	}
-
 
 	@Override
 	public String toString() {

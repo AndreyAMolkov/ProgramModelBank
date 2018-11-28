@@ -4,49 +4,37 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import demo.model.Account;
 import demo.model.Client;
-import demo.model.Login;
+import demo.model.Credential;
 import demo.model.Story;
 
 //@Transactional
 @Repository
-public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
+public class DaoImp extends BaseDao implements Dao {
 	@PersistenceContext
 	private EntityManager em;
-
-	private Story storyInput;
-	private Story storyOutput;
 
 	public Story getStory() {
 		return new Story();
 	}
 
-	public DaoImp() {
-		super();
-
-	}
-
-	public DaoImp(SessionFactory sessionFactory) {
-		super();
-
-	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public void newAccount(Long id, Class<?> T) {
-		Client client = (Client) getById(id, T);
+	public void newAccount(Long id) {
+		Client client = getClientById(id);
 		client.setAccounts(new Account());
 	}
 
 	// MANDATORY: Transaction must be created before.
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void addAmount(Long id, Long amount, Long idPartner) throws BankTransactionException {
-		Account account = (Account) getById(id, Account.class);
+
+		Account account = getAccountById(id);
 		if (account == null) {
 			throw new BankTransactionException("Account not found " + id);
 		}
@@ -57,11 +45,11 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 		}
 
 		if (amount >= 0) {
-			storyInput = getStory();
+			Story storyInput = getStory();
 			storyInput.input("transfer from" + idPartner, amount);
 			account.setHistories(storyInput);
 		} else {
-			storyOutput = getStory();
+			Story storyOutput = getStory();
 			storyOutput.output("transfer to " + idPartner, amount);
 			account.setHistories(storyOutput);
 		}
@@ -76,9 +64,9 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	@Transactional(readOnly = true, rollbackFor = javax.persistence.NoResultException.class)
 	@Override
-	public Login findLoginByname(String username) {
-		TypedQuery<Login> list = null;
-		list = em.createQuery("SELECT u from Login u WHERE u.login = :username", Login.class).setParameter("username",
+	public Credential findCredentialByname(String username) {
+		TypedQuery<Credential> list = null;
+		list = em.createQuery("SELECT c from Credential c WHERE c.login = :username", Credential.class).setParameter("username",
 				username);
 
 		return list.getSingleResult();
@@ -86,8 +74,8 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	@Transactional(rollbackFor = Exception.class)
 	public void addSumAccount(Long number, Long sum, String source) {
-		Account account = (Account) getById(number, Account.class);
-		storyInput = getStory();
+		Account account = getAccountById(number);
+		Story storyInput = getStory();
 		storyInput.input(source, sum);
 		account.setHistories(storyInput);
 
@@ -95,7 +83,7 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	@Transactional
 	public Boolean deleteAccount(Long id, Long number) {
-		Client client = (Client) getById(id, Client.class);
+		Client client = getClientById(id);
 		for (Account account : client.getAccounts()) {
 			if (account.getNumber().equals(number)) {
 				client.getAccounts().remove(account);
@@ -109,23 +97,24 @@ public class DaoImp<T> extends BaseDao<Object> implements Dao<Object> {
 
 	@Transactional(readOnly = true)
 	public Boolean findLoginInBd(String login) {
-		if (findLoginByname(login) != null)
-			return true;
-		else
-			return false;
+		Boolean result = false;
+		if (findCredentialByname(login) != null) {
+			result = true;
+		}
+		return result;
 	}
 
-	public Boolean ClientHaveAccount(Client client, Long numberAccount) {
-		return client.getAccounts().stream().map(e -> e.getNumber()).anyMatch(e -> e.equals(numberAccount));
+	public Boolean clientHaveAccount(Client client, Long numberAccount) {
+		return client.getAccounts().stream().map(Account::getNumber).anyMatch(e -> e.equals(numberAccount));
 
 	}
 
 	@Transactional(readOnly = true)
 	public Object nameLoginClientOwner(Long idClientOwner) {
 		String name = null;
-		Client client = (Client) getById(idClientOwner, Client.class);
+		Client client = getClientById(idClientOwner);
 		if (client != null)
-			name = client.getLogin().getLogin();
+			name = client.getCredential().getLogin();
 
 		return name;
 	}

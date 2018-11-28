@@ -10,8 +10,8 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 
 import demo.model.Account;
 import demo.model.Client;
+import demo.model.Credential;
 import demo.model.Data;
-import demo.model.Login;
 import demo.model.Story;
 
 //	you can use for fast setting your database (for properly  structure tables)
@@ -36,7 +36,7 @@ public class Main {
 		sessionBuilder.addAnnotatedClass(Account.class);
 		sessionBuilder.addAnnotatedClass(Client.class);
 		sessionBuilder.addAnnotatedClass(Data.class);
-		sessionBuilder.addAnnotatedClass(Login.class);
+		sessionBuilder.addAnnotatedClass(Credential.class);
 		sessionBuilder.addAnnotatedClass(Story.class);
 		sessionBuilder.setProperty("hibernate.dialect", "MySQL57InnoDB");
 		sessionBuilder.setProperty("hibernate.show_sql", "true");
@@ -44,21 +44,23 @@ public class Main {
 		sessionBuilder.setProperty("hibernate.use_sql_comments", "true");
 		SessionFactory sessionFactory = sessionBuilder.buildSessionFactory();
 
-		Session session = sessionFactory.openSession();
+		try (Session session = sessionFactory.openSession()) {
 
-		EntityManager em = session.getEntityManagerFactory().createEntityManager();
-		em.getTransaction().begin();
+			EntityManager em = session.getEntityManagerFactory().createEntityManager();
+			em.getTransaction().begin();
 
-		Data data = new Data("Ivan", "Ivanovich", "Vasin");
+			Data data = new Data("Ivan", "Ivanovich", "Vasin");
 
-		Login loginC = new Login("root", "1234", "ADMIN");
+			Credential credential = new Credential("root", "1234", "ADMIN");
 
-		Client client = new Client(loginC, data);
+			Client client = new Client(credential, data);
 
-		em.persist(client);
-		em.getTransaction().commit();
+			em.persist(client);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-		System.out.println("End of main");
 	}
 
 }

@@ -12,28 +12,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import demo.dao.Dao;
 import demo.model.Client;
-import demo.model.Login;
+import demo.model.Credential;
 
 @Service("userDetailsService")
 public class UserDetailsServiceImp implements UserDetailsService {
-	private static Logger log =(Logger) LoggerFactory.getLogger("demo.controller.UserDetailsServiceImp");
+	private static Logger log =LoggerFactory.getLogger("demo.controller.UserDetailsServiceImp");
 	@Autowired
-	private Dao<?> dao;
+	private Dao dao;
 
 	@Transactional(readOnly = true)
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username){
 		String nameMethod = "loadUserByUsername";		
-		Login login = (Login) dao.findLoginByname(username);
+		Credential credential = dao.findCredentialByname(username);
 		UserBuilder builder = null;
 		Client client=null;
-		if (login != null) {
+		if (credential != null) {
 
-			client = login.getClient();
+			client = credential.getClient();
 			
 			builder = org.springframework.security.core.userdetails.User.withUsername(username);
-			builder.password(login.getPassword());
-			builder.roles(login.getRole());
+			builder.password(credential.getPassword());
+			builder.roles(credential.getRole());
 
 		} else {
 			String message = "User: " + username + " not found";

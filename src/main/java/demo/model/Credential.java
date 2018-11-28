@@ -10,14 +10,14 @@ import javax.persistence.UniqueConstraint;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Entity(name = "Login")
-@Table(name = "logins", uniqueConstraints = { @UniqueConstraint(columnNames = { "login" }) })
-public class Login {
+@Entity(name = "Credential")
+@Table(name = "credentials", uniqueConstraints = { @UniqueConstraint(columnNames = { "login" }) })
+public class Credential {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(mappedBy = "login")
+	@OneToOne(mappedBy = "credential")
 	private Client client;
 
 	private String login;
@@ -26,11 +26,11 @@ public class Login {
 
 	private String role;
 
-	public Login() {
+	public Credential() {
 		super();
 	}
 
-	public Login(Long id, Client client, String login, String password, String role) {
+	public Credential(Long id, Client client, String login, String password, String role) {
 		super();
 		setId(id);
 		setClient(client);
@@ -39,25 +39,13 @@ public class Login {
 		setRole(role);
 	}
 
-	public Login(String login, String password, String role) {
+	public Credential(String login, String password, String role) {
 		setId(id);
 		setLogin(login);
 		setPassword(password);
 		setRole(role);
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Login))
-			return false;
-		return id != null && id.equals(((Login) o).id);
-	}
-	@Override
-	public int hashCode() {
-		return 33;
-	}
 	public void setAllData(String login, String password, String role) {
 		setLogin(login);
 		setPassword(password);
@@ -95,10 +83,6 @@ public class Login {
 	public void setPassword(String password) {
 		String encoded = new BCryptPasswordEncoder().encode(password);
 		this.password = encoded;
-	}
-
-	public void setPasswordEmpty() {
-		this.password = "";
 	}
 
 	public String getRole() {

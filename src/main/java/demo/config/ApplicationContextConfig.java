@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -23,16 +24,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import ch.qos.logback.classic.Logger;
 import demo.constant.Constants;
 import demo.dao.Dao;
 import demo.dao.DaoImp;
 import demo.model.Account;
 import demo.model.AccountCheckAddSum;
 import demo.model.Client;
+import demo.model.Credential;
 import demo.model.Data;
 import demo.model.InfoProblem;
-import demo.model.Login;
 import demo.model.SendMoneyForm;
 import demo.model.Story;
 
@@ -42,11 +42,11 @@ import demo.model.Story;
 @EnableTransactionManagement
 @Import({ FormLoginSecurityConfig.class })
 public class ApplicationContextConfig implements TransactionManagementConfigurer {
-	private static Logger log = (Logger) LoggerFactory.getLogger("demo.controller.ApplicationContextConfig");
+	private static Logger log = LoggerFactory.getLogger("demo.controller.ApplicationContextConfig");
 	
 	@Bean(name="loginEntity")
-	public Login getLogin() {
-		return new Login();
+	public Credential getCredential() {
+		return new Credential();
 	}
 	
 	@Bean(name="sendMoneyForm")
@@ -124,7 +124,7 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 		sessionBuilder.addAnnotatedClass(Account.class);
 		sessionBuilder.addAnnotatedClass(Client.class);
 		sessionBuilder.addAnnotatedClass(Data.class);
-		sessionBuilder.addAnnotatedClass(Login.class);
+		sessionBuilder.addAnnotatedClass(Credential.class);
 		sessionBuilder.addAnnotatedClass(Story.class);
 		sessionBuilder.setProperty("hibernate.dialect", "MySQL57InnoDB");
 		sessionBuilder.setProperty("hibernate.show_sql", "true");
@@ -136,8 +136,8 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 
 	@Autowired
 	@Bean(name = "dao")
-	public Dao<?> getDao(SessionFactory sessionFactory) {
-		return new DaoImp<Object>(sessionFactory);
+	public Dao getDao() {
+		return new DaoImp();
 	}
 
 	@Override

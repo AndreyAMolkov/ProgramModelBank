@@ -42,25 +42,12 @@ public class Data {
 		this.lastName = lastName;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof Data))
-			return false;
-		return id != null && id.equals(((Data) o).id);
-	}
-
-	@Override
-	public int hashCode() {
-		return 31;
-	}
-
 	public void setAllData(String firstName, String secondName, String lastName) {
 		setFirstName(firstName);
 		setSecondName(secondName);
 		setLastName(lastName);
 	}
+
 
 	public Long getId() {
 		return id;

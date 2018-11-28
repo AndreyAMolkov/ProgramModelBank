@@ -62,7 +62,7 @@ th, td {
 			<tr>
 				<td style="width: 30px;">Id client</td>
 				<td style="width: 40px;">Data</td>
-				<td style="width: 40px;">Login</td>
+				<td style="width: 40px;">Credential</td>
 				<td style="width: 40px;">Role</td>
 
 				<td style="width: 40px;">Number of accounts</td>
@@ -73,8 +73,8 @@ th, td {
 					<td style="width: 30px;">${client.getId()}</td>
 
 					<td style="width: 40px;">${client.getData()}</td>
-					<td style="width: 40px;">${client.getLogin().getLogin()}</td>
-					<td style="width: 40px;">${client.getLogin().getRole()}</td>
+					<td style="width: 40px;">${client.getCredential().getLogin()}</td>
+					<td style="width: 40px;">${client.getCredential().getRole()}</td>
 
 					<td style="width: 40px;">
 						<ul>

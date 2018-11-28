@@ -28,24 +28,24 @@
 			<form:form action="/Bank/admin/edit" method="POST"
 				modelAttribute="client">
 				<form:hidden path="id" />
-				<form:hidden path="login.id" />
+				<form:hidden path="credential.id" />
 				<form:hidden path="data.id" />
 				<tr>
 					<td>login</td>
-					<td><input name="login.login"
-						value="${client.getLogin().getLogin()}" pattern="[a-z]{0,9}"
+					<td><input name="credential.login"
+						value="${client.getCredential().getLogin()}" pattern="[a-z]{0,9}"
 						required title="all small letters, no more than 9" /></td>
 				</tr>
 				<tr>
 					<td>password</td>
-					<td><input name="login.password" value=""
+					<td><input name="credential.password" value=""
 						pattern="[a-zA-Z0-9]{0,10}" required
 						title="all small or capital letters or number, no more than 10" /></td>
 				</tr>
 				<tr>
 					<td>role</td>
-					<td><input name="login.role"
-						value="${client.getLogin().getRole()}" pattern="[A-Z]{0,9}"
+					<td><input name="credential.role"
+						value="${client.getCredential().getRole()}" pattern="[A-Z]{0,9}"
 						required title="all capital letters, no more than 9" /></td>
 				</tr>
 				<tr>

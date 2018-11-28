@@ -24,7 +24,7 @@ public class Client {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "data_id")
 	private Data data;
 
@@ -32,9 +32,9 @@ public class Client {
 	@javax.persistence.Transient
 	private Story story;
 
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "loginOfClient_id")
-	private Login login;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "credential_id")
+	private Credential credential;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@JoinColumn(name = "client_id")
@@ -42,20 +42,20 @@ public class Client {
 
 	private String nameFromData;
 
-	public Client(Login login, Data data) {
+	public Client(Credential credential, Data data) {
 		setAccounts(new ArrayList<Account>());
 		setData(data);
-		setLogin(login);
+		setCredential(credential);
 	}
 
 	public Client() {
 	}
 
-	public Client(Long id, Data data, Login login) {
+	public Client(Long id, Data data, Credential credential) {
 		super();
 		this.id = id;
 		this.data = data;
-		this.login = login;
+		this.credential = credential;
 	}
 
 	public Long getId() {
@@ -82,19 +82,19 @@ public class Client {
 		this.nameFromData = data.getFirstName();
 	}
 
-	public Login getLogin() {
-		if (login == null) {
-			setLogin(new Login());
+	public Credential getCredential() {
+		if (credential == null) {
+			setCredential(new Credential());
 		}
-		return login;
+		return credential;
 	}
 
-	public void setLogin(Login login) {
-		if (login == null) {
-			login = new Login();
+	public void setCredential(Credential credential) {
+		if (credential == null) {
+			credential = new Credential();
 		}
-		this.login = login;
-		login.setClient(this);
+		this.credential = credential;
+		credential.setClient(this);
 	}
 
 	public List<Account> getAccounts() {
@@ -131,7 +131,7 @@ public class Client {
 
 	@Override
 	public String toString() {
-		return "Client [id=" + id + ", dataOfClient=" + data + ", loginOfClient=" + login + ", accounts=" + accounts
+		return "Client [id=" + id + ", dataOfClient=" + data + ", Credential=" + credential + ", accounts=" + accounts
 				+ "]";
 	}
 

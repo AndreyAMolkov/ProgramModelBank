@@ -17,7 +17,7 @@ public class AccountCheckAddSum {
 	private Boolean denied;
 
 	@Autowired
-	private Dao<?> dao;
+	private Dao dao;
 
 	public AccountCheckAddSum() {
 		this.denied = false;
@@ -30,15 +30,15 @@ public class AccountCheckAddSum {
 	public void setIdAccountTo(long idAccountTo) {
 
 		this.idAccountTo = idAccountTo;
-		Account account = (Account) dao.getById(idAccountTo, Account.class);
+		Account account = dao.getAccountById(idAccountTo);
 
 		String fullName = "NOT FOUND";
 		try {
-			Data data = ((Data) dao.getById(account.getData(), Data.class));
+			Data data = dao.getDataById(account.getData());
 
 			fullName = data.getFullName();
 
-			if (fullName.isEmpty() || fullName == null) {
+			if (fullName == null || fullName.isEmpty()) {
 				fullName = "NOT FOUND";
 				setDenied(false);
 			}

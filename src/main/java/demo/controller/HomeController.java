@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,21 +16,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ch.qos.logback.classic.Logger;
 import demo.constant.Constants;
 import demo.dao.BankTransactionException;
 import demo.dao.Dao;
 import demo.model.Account;
 import demo.model.AccountCheckAddSum;
 import demo.model.Client;
+import demo.model.Credential;
 import demo.model.Data;
 import demo.model.InfoProblem;
-import demo.model.Login;
 import demo.model.SendMoneyForm;
 
 @Controller
 public class HomeController {
-	private static Logger log = (Logger) LoggerFactory.getLogger("demo.controller.HomeController");
+	private static Logger log = LoggerFactory.getLogger("demo.controller.HomeController");
 
 	@Autowired
 	private ModelAndView model;
@@ -38,7 +38,7 @@ public class HomeController {
 	private SendMoneyForm sendMoneyForm;
 
 	@Autowired(required = true)
-	private Login loginEntity;
+	private Credential credential;
 
 	@Autowired
 	private Data data;
@@ -57,7 +57,7 @@ public class HomeController {
 	private AccountCheckAddSum accountCheckAddSum;
 
 	@Autowired
-	private Dao<?> dao;
+	private Dao dao;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView start() {
@@ -86,10 +86,10 @@ public class HomeController {
 		loadOneClient(id);
 
 		if (loadCurrentAccount(idAccount) == null) {
-			handlerEvents("not found card: " + idAccount);
+			handlerEvents(Constants.NOT_FOUND_CARD + idAccount);
 		}
 
-		model.setViewName("showClientAdmin");
+		model.setViewName(Constants.CLIENT_SHOW_FOR_ADMIN);
 
 		return model;
 
@@ -101,7 +101,7 @@ public class HomeController {
 		String nameMethod = "showClientHistory";
 		log.debug(nameMethod + Constants.FOUR_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal, Constants.PRINCIPAL_ROLE,
 				rolePrincipal, Constants.CLIENT_ID, id, Constants.ACCOUNT_ID, idAccount);
-		model.setViewName("showClient");
+		model.setViewName(Constants.CLIENT_SHOW);
 		clearSettingOfOldModel();
 		loadOneClient(id);
 		if (loadCurrentAccount(idAccount) == null) {
@@ -117,7 +117,7 @@ public class HomeController {
 		String nameMethod = "login";
 		log.debug(nameMethod + Constants.TWO_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal, Constants.PRINCIPAL_ROLE,
 				rolePrincipal);
-		model.setViewName("login");
+		model.setViewName(Constants.PAGE_LOGIN);
 		return model;
 
 	}
@@ -131,17 +131,17 @@ public class HomeController {
 		clearSettingOfOldModel();
 		if ("ROLE_CLIENT".equals(rolePrincipal)) {
 			loadOneClient(idPrincipal);
-			model.setViewName("showClient");
+			model.setViewName(Constants.CLIENT_SHOW);
 			return model;
 		}
 
 		if ("ROLE_ADMIN".equals(rolePrincipal)) {
-			model.setViewName("allClients");
+			model.setViewName(Constants.ALL_CLIENTS);
 			loadAllClients();
 			return model;
 		}
 		if ("ROLE_CASHIER".equals(rolePrincipal)) {
-			model.setViewName("cashier");
+			model.setViewName(Constants.CASHIER);
 			return model;
 		}
 
@@ -149,17 +149,17 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/admin/addAccount", method = { RequestMethod.POST })
-	public ModelAndView addAccountForAdmin(@RequestParam(value = "idClient") Long id) {
+	public ModelAndView addAccountForAdmin(@RequestParam(value = "idClient") Long idClient) {
 		String nameMethod = "addAccountForAdmin";
 		log.debug(nameMethod + Constants.THREE_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal,
-				Constants.PRINCIPAL_ROLE, rolePrincipal, Constants.CLIENT_ID, id);
+				Constants.PRINCIPAL_ROLE, rolePrincipal, Constants.CLIENT_ID, idClient);
 		clearSettingOfOldModel();
 		try {
-			dao.newAccount(id, Client.class);
-			loadOneClient(id);
-			model.setViewName("showClientAdmin");
+			dao.newAccount(idClient);
+			loadOneClient(idClient);
+			model.setViewName(Constants.CLIENT_SHOW_FOR_ADMIN);
 		} catch (NullPointerException e) {
-			handlerEvents("not found id: " + id);
+			handlerEvents(Constants.NOT_FOUND_CARD + idClient);
 			loadAllClients();
 
 		}
@@ -174,13 +174,13 @@ public class HomeController {
 		log.debug(nameMethod + Constants.THREE_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal,
 				Constants.PRINCIPAL_ROLE, rolePrincipal, Constants.CLIENT_ID, id);
 		try {
-			dao.remove(id, Client.class);
+			dao.remove(id);
 		} catch (IllegalArgumentException e) {
-			handlerEvents("not found id: " + id);
+			handlerEvents(Constants.NOT_FOUND_ID + id);
 		}
 
 		loadAllClients();
-		model.setViewName("allClients");
+		model.setViewName(Constants.ALL_CLIENTS);
 
 		return model;
 	}
@@ -211,7 +211,7 @@ public class HomeController {
 		log.debug(nameMethod + Constants.THREE_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal,
 				Constants.PRINCIPAL_ROLE, rolePrincipal, Constants.ACCOUNT_ID, idAccount);
 		clearSettingOfOldModel();
-		model.setViewName("showClient");
+		model.setViewName(Constants.CLIENT_SHOW);
 		loadCurrentAccount(idAccount);
 		if (idAccount != null) {
 			loadCurrentAccount(idAccount);
@@ -224,7 +224,7 @@ public class HomeController {
 	public ModelAndView addEditClien(@RequestParam(value = "id") Long id) {
 		String nameMethod = "addEditClien";
 		clearSettingOfOldModel();
-		model.setViewName("clientForm");
+		model.setViewName(Constants.FORM_CLIENT);
 		log.debug(nameMethod + Constants.THREE_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal,
 				Constants.PRINCIPAL_ROLE, rolePrincipal, Constants.CLIENT_ID, id);
 		if ((client = loadOneClient(id)) == null) {
@@ -233,46 +233,45 @@ public class HomeController {
 			return model;
 		}
 
-		client.getLogin().setPasswordEmpty();
 		return model;
 
 	}
 
 	@RequestMapping(value = "/admin/edit", method = { RequestMethod.POST })
 	public ModelAndView editClientForAdmin(@RequestParam(value = "id", required = false) Long id,
-			@RequestParam(value = "login.id", required = false) Long idLogin,
+			@RequestParam(value = "credential.id", required = false) Long idCredential,
 			@RequestParam(value = "data.id", required = false) Long idData,
-			@RequestParam(value = "login.login") String login, @RequestParam(value = "login.password") String password,
-			@RequestParam(value = "login.role") String role, @RequestParam(value = "data.firstName") String firsName,
+			@RequestParam(value = "credential.login") String login,
+			@RequestParam(value = "credential.password") String password,
+			@RequestParam(value = "credential.role") String role,
+			@RequestParam(value = "data.firstName") String firsName,
 			@RequestParam(value = "data.secondName") String secondName,
 			@RequestParam(value = "data.lastName") String lastName){
 		String nameMethod = "editClientForAdmin";
 		log.debug(nameMethod + Constants.SEVEN_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal,
-				Constants.PRINCIPAL_ROLE, rolePrincipal, "idLogin", idLogin, "idData", idData, "firstName", firsName,
+				Constants.PRINCIPAL_ROLE, rolePrincipal, "idCredential", idCredential, "idData", idData, "firstName", firsName,
 				"secondName", secondName, "lastName", lastName);
 		clearSettingOfOldModel();
 		client.setId(id);
 		data.setAllData(idData, firsName, secondName, lastName);
-		loginEntity.setAllData(idLogin, login, password, role);
+		credential.setAllData(idCredential, login, password, role);
 		client.setData(data);
-		client.setLogin(loginEntity);
+		client.setCredential(credential);
 
 		try {
 			if (dao.findLoginInBd(login)) {
 				if (id != null) {
 					if (!login.equals(dao.nameLoginClientOwner(id))) {
 						handlerEvents("login isn't unique");
-						loginEntity.setPasswordEmpty();
-						model.setViewName("clientForm");
-						model.addObject("client", client);
+						model.setViewName(Constants.FORM_CLIENT);
+						model.addObject(Constants.CLIENT, client);
 						return model;
 					}
 
 				} else {
 					handlerEvents("login isn't unique");
-					loginEntity.setPasswordEmpty();
 					model.setViewName("clientForm");
-					model.addObject("client", client);
+					model.addObject(Constants.CLIENT, client);
 					return model;
 				}
 
@@ -285,8 +284,7 @@ public class HomeController {
 		if (client.getId() == null) {
 			dao.add(client);
 		} else {
-			dao.merge(client.getData());
-			dao.merge(client.getLogin());
+			dao.merge(client);
 		}
 		loadAllClients();
 		model.setViewName("allClients");
@@ -301,7 +299,7 @@ public class HomeController {
 				Constants.PRINCIPAL_ROLE, rolePrincipal, "create new client");
 		clearSettingOfOldModel();
 		model.setViewName("clientForm");
-		model.addObject("client", new Client());
+		model.addObject(Constants.CLIENT, new Client());
 
 		return model;
 	}
@@ -328,12 +326,12 @@ public class HomeController {
 		String nameMethod = "accountCheckAddSum";
 
 		log.debug(nameMethod + Constants.FIVE_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal, Constants.PRINCIPAL_ROLE,
-				rolePrincipal, "idAccountTo", idAccountTo, "amount", sum, "denied", denied);
+				rolePrincipal, "idAccountTo", idAccountTo, "amount", sum, Constants.DENIED, denied);
 		clearSettingOfOldModel();
 		model.setViewName("cashier");
 		accountCheckAddSum.setDenied(denied);
 		if (denied) {
-			infoProblem.setCause("denied");
+			infoProblem.setCause(Constants.DENIED);
 			model.setViewName("redirect:" + "home");
 
 		} else {
@@ -382,8 +380,8 @@ public class HomeController {
 				Constants.CLIENT_ID, id, Constants.ACCOUNT_ID, idAccount);
 		clearSettingOfOldModel();
 		loadOneClient(id);
-		model.setViewName("showClient");
-		model.addObject("sendMoneyForm", sendMoneyForm);
+		model.setViewName(Constants.CLIENT_SHOW);
+		model.addObject(Constants.FORM_SEND_MONEY, sendMoneyForm);
 
 		return model;
 	}
@@ -398,7 +396,7 @@ public class HomeController {
 				Constants.CLIENT_ID, id, Constants.ACCOUNT_ID, toAccountId, "fromAccountId", fromAccountId);
 		client = loadOneClient(id);
 
-		if (!dao.ClientHaveAccount(client, fromAccountId)) {
+		if (!dao.clientHaveAccount(client, fromAccountId)) {
 			handlerEvents("it's not your account");
 			model.setViewName("showClient");
 			model.addObject("sendMoneyForm", sendMoneyForm);
@@ -429,7 +427,7 @@ public class HomeController {
 		if (auth != null) {
 			Authentication principal = SecurityContextHolder.getContext().getAuthentication();
 			userName = principal.getName();
-			this.idPrincipal = dao.findLoginByname(userName).getIdClient();
+			this.idPrincipal = dao.findCredentialByname(userName).getIdClient();
 
 			this.rolePrincipal = ((principal.getAuthorities().toArray())[0]).toString();
 		}
@@ -454,21 +452,20 @@ public class HomeController {
 		model.addObject("error", infoProblem);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void loadAllClients() {
-		List<Client> listClients = (List<Client>) dao.getAll(Client.class);
+		List<Client> listClients = dao.getAll();
 		model.setViewName("allClients");
 		model.addObject("clients", listClients);
 	}
 
 	private Client loadOneClient(Long id) {
-		client = (Client) dao.getById(id, Client.class);
+		client = dao.getClientById(id);
 		model.addObject("client", client);
 		return client;
 	}
 
 	private Account loadCurrentAccount(Long idAccount) {
-		Account account = (Account) dao.getById(idAccount, Account.class);
+		Account account = dao.getAccountById(idAccount);
 		model.addObject("currentAccount", account);
 		return account;
 	}
