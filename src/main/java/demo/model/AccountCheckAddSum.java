@@ -31,13 +31,10 @@ public class AccountCheckAddSum {
 
 		this.idAccountTo = idAccountTo;
 		Account account = dao.getAccountById(idAccountTo);
-
 		String fullName = "NOT FOUND";
 		try {
 			Data data = dao.getDataById(account.getData());
-
 			fullName = data.getFullName();
-
 			if (fullName == null || fullName.isEmpty()) {
 				fullName = "NOT FOUND";
 				setDenied(false);
@@ -45,9 +42,7 @@ public class AccountCheckAddSum {
 		} catch (NullPointerException e) {
 			setDenied(false);
 		}
-
 		setNameOfClientTo(fullName);
-
 	}
 
 	public long getIdClientTo() {

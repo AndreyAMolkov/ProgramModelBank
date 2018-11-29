@@ -28,7 +28,6 @@ private static Logger log = LoggerFactory.getLogger("demo.controller.Main");
 			cpds.setDriver("org.gjt.mm.mysql.Driver");
 		} catch (ClassNotFoundException e) {
 			log.error(nameMethod + Constants.ONE_PARAMETERS, "Error set driver for AdapterCPDS", e);
-
 		}
 			cpds.setUrl("jdbc:mysql://localhost:3306/bank?useSSL=false");
 			cpds.setUser("root");
@@ -48,18 +47,10 @@ private static Logger log = LoggerFactory.getLogger("demo.controller.Main");
 			sessionBuilder.setProperty("hibernate.hbm2ddl.auto", "update");
 			sessionBuilder.setProperty("hibernate.use_sql_comments", "true");
 			SessionFactory sessionFactory = sessionBuilder.buildSessionFactory();
-	
-
-		
-
-		
 			try (Session session = sessionFactory.openSession()) {
-	
 				EntityManager em = session.getEntityManagerFactory().createEntityManager();
 				em.getTransaction().begin();
-	
 				Data data = new Data("Ivan", "Ivanovich", "Vasin");
-	
 				Credential credential = new Credential("root", "1234", "ADMIN");
 				Client client = new Client(credential, data);
 				em.persist(client);

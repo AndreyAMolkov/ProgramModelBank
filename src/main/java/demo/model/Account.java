@@ -85,7 +85,6 @@ public class Account {
 		if (histories == null) {
 			this.histories = new ArrayList<>();
 		}
-
 		return histories;
 	}
 
@@ -95,11 +94,10 @@ public class Account {
 
 	private List<Story> getCopy() {
 		return getHistories().stream().map(Story::storyForSort).collect(Collectors.toList());
-
 	}
 
 	public List<Story> sortHistoriesLastDateFirst(List<Story> historiesOld) {
-		Collections.sort(historiesOld,(story1, story2)->story2.getDate().compareTo(story1.getDate()));
+		Collections.sort(historiesOld, (story1, story2) -> story2.getDate().compareTo(story1.getDate()));
 		return historiesOld;
 	}
 
@@ -110,9 +108,7 @@ public class Account {
 		if (historiesNew == null) {
 			historiesNew = new ArrayList<>(5);
 		}
-
 		historiesNew.stream().forEach(this::setHistories);
-
 	}
 
 	private boolean validateStory(Story story) {
@@ -121,7 +117,6 @@ public class Account {
 		Boolean flag = true;
 
 		if (("output").equals(story.getOperation())) {
-
 			Long result = sumOfAccount - sumOfStory;
 			if (result < 0)
 				flag = false;

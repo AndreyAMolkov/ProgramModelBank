@@ -15,11 +15,9 @@ public class Data {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "client_id")
 	private Client client;
-
 	private String firstName;
 	private String secondName;
 	private String lastName;
@@ -47,7 +45,6 @@ public class Data {
 		setSecondName(secondName);
 		setLastName(lastName);
 	}
-
 
 	public Long getId() {
 		return id;
@@ -101,6 +98,5 @@ public class Data {
 	public void setAllData(Long idData, String firsName, String secondName, String lastName) {
 		setAllData(firsName, secondName, lastName);
 		setId(idData);
-
 	}
 }

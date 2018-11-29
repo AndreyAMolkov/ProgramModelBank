@@ -1,7 +1,6 @@
 package demo.model;
 
 public class InfoProblem {
-
 	private String name;
 	private String cause;
 

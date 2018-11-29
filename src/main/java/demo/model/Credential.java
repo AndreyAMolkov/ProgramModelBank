@@ -16,14 +16,10 @@ public class Credential {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	@OneToOne(mappedBy = "credential")
 	private Client client;
-
 	private String login;
-
 	private String password;
-
 	private String role;
 
 	public Credential() {
@@ -105,7 +101,5 @@ public class Credential {
 	public void setAllData(Long idLogin, String login, String password, String role) {
 		setId(idLogin);
 		setAllData(login, password, role);
-
 	}
-
 }

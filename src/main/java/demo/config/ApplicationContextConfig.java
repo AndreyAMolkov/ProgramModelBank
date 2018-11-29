@@ -101,7 +101,6 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 		try {
 			cpds.setDriver("org.gjt.mm.mysql.Driver");
 		} catch (ClassNotFoundException e) {
-
 			log.error(nameMethod + Constants.ONE_PARAMETERS,"Error",e);
 		}
 		cpds.setUrl("jdbc:mysql://localhost:3306/bank?useSSL=false&allowPublicKeyRetrieval=true");

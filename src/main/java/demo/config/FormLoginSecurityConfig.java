@@ -55,7 +55,6 @@ public class FormLoginSecurityConfig extends WebSecurityConfigurerAdapter {
 				.exceptionHandling().accessDeniedPage("/login?error=true")
 					.and()
 				.csrf().disable();
-
 	}
 
 }

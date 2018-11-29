@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 @Entity(name = "Story")
 @Table(name = "stories")
 @Scope(value = "prototype")
-public class Story  {
+public class Story {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -31,7 +31,6 @@ public class Story  {
 		this.operation = operation;
 		this.place = place;
 		this.sum = sum;
-
 	}
 
 	public Story() {
@@ -105,7 +104,6 @@ public class Story  {
 		return "StoryOfAccount [id=" + id + ", account=" + account + ", date=" + date + " " + operation + " " + place
 				+ " " + sum + "]";
 	}
-
 
 	protected Story storyForSort() {
 		return new Story(id, account, date, operation, place, sum);

@@ -23,7 +23,6 @@ public class DaoImp extends BaseDao implements Dao {
 		return new Story();
 	}
 
-
 	@Transactional(rollbackFor = Exception.class)
 	public void newAccount(Long id) {
 		Client client = getClientById(id);
@@ -66,9 +65,8 @@ public class DaoImp extends BaseDao implements Dao {
 	@Override
 	public Credential findCredentialByname(String username) {
 		TypedQuery<Credential> list = null;
-		list = em.createQuery("SELECT c from Credential c WHERE c.login = :username", Credential.class).setParameter("username",
-				username);
-
+		list = em.createQuery("SELECT c from Credential c WHERE c.login = :username", Credential.class)
+				.setParameter("username", username);
 		return list.getSingleResult();
 	}
 
@@ -78,7 +76,6 @@ public class DaoImp extends BaseDao implements Dao {
 		Story storyInput = getStory();
 		storyInput.input(source, sum);
 		account.setHistories(storyInput);
-
 	}
 
 	@Transactional
@@ -89,9 +86,7 @@ public class DaoImp extends BaseDao implements Dao {
 				client.getAccounts().remove(account);
 				return true;
 			}
-
 		}
-
 		return false;
 	}
 
@@ -106,16 +101,15 @@ public class DaoImp extends BaseDao implements Dao {
 
 	public Boolean clientHaveAccount(Client client, Long numberAccount) {
 		return client.getAccounts().stream().map(Account::getNumber).anyMatch(e -> e.equals(numberAccount));
-
 	}
 
 	@Transactional(readOnly = true)
 	public Object nameLoginClientOwner(Long idClientOwner) {
 		String name = null;
 		Client client = getClientById(idClientOwner);
-		if (client != null)
+		if (client != null) {
 			name = client.getCredential().getLogin();
-
+		}
 		return name;
 	}
 }

@@ -19,19 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Entity(name = "Client")
 @Table(name = "clients")
 public class Client {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "data_id")
 	private Data data;
-
 	@Autowired
 	@javax.persistence.Transient
 	private Story story;
-
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "credential_id")
 	private Credential credential;
@@ -39,7 +35,6 @@ public class Client {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@JoinColumn(name = "client_id")
 	private List<Account> accounts;
-
 	private String nameFromData;
 
 	public Client(Credential credential, Data data) {
@@ -109,7 +104,6 @@ public class Client {
 			accounts = new ArrayList<>();
 		}
 		accounts.forEach(a -> a.setData(getData().getId()));
-		
 		this.accounts = accounts;
 	}
 

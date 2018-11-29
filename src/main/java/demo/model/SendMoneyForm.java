@@ -6,7 +6,6 @@ public class SendMoneyForm {
 	private Long amount;
 
 	public SendMoneyForm() {
-
 	}
 
 	public SendMoneyForm(Long fromAccountId, Long toAccountId, Long amount) {
@@ -38,5 +37,4 @@ public class SendMoneyForm {
 	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
-
 }
