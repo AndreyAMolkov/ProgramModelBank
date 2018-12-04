@@ -31,4 +31,5 @@ public class SpringWebAppInitializer implements WebApplicationInitializer {
 		fr.addMappingForUrlPatterns(null, true, "/*");
 	}
 
+	
 }

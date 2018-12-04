@@ -126,9 +126,9 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 		sessionBuilder.addAnnotatedClass(Credential.class);
 		sessionBuilder.addAnnotatedClass(Story.class);
 		sessionBuilder.setProperty("hibernate.dialect", "MySQL57InnoDB");
-		sessionBuilder.setProperty("hibernate.show_sql", "true");
+	//	sessionBuilder.setProperty("hibernate.show_sql", "false");
 		sessionBuilder.setProperty("hbm2ddl.auto", "update");
-		sessionBuilder.setProperty("hibernate.use_sql_comments", "true");
+	//	sessionBuilder.setProperty("hibernate.use_sql_comments", "false");
 		sessionBuilder.setProperty("hibernate.enable_lazy_load_no_trans", "true");
 		return sessionBuilder.buildSessionFactory();
 	}
