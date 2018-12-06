@@ -5,6 +5,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +32,7 @@ public class DaoImp extends BaseDao implements Dao {
 
 	// MANDATORY: Transaction must be created before.
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void addAmount(Long id, Long amount, Long idPartner) throws BankTransactionException {
+	public void addAmount(Long id, Long amount, Long idPartner) throws BankTransactionException,TransactionSystemException {
 
 		Account account = getAccountById(id);
 		if (account == null) {
@@ -55,8 +56,8 @@ public class DaoImp extends BaseDao implements Dao {
 
 	}
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = BankTransactionException.class)
-	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount) throws BankTransactionException {
+	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount) throws BankTransactionException, TransactionSystemException {
 		addAmount(toAccountId, amount, fromAccountId);
 		addAmount(fromAccountId, -amount, toAccountId);
 	}

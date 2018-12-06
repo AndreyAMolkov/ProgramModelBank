@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.CannotCreateTransactionException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -123,11 +124,7 @@ public class HomeController {
 			log.warn(nameMethod + Constants.THREE_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal, Constants.PRINCIPAL_ROLE,
 					rolePrincipal,"accessDenied ",accessDenied);
 		}
-		if(logout!=null) {
-			model.addObject("logout", logout);
-			log.debug(nameMethod + Constants.THREE_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal, Constants.PRINCIPAL_ROLE,
-					rolePrincipal,"logout ",logout);
-		}
+
 		
 		model.setViewName(Constants.PAGE_LOGIN);
 		return model;
@@ -419,7 +416,7 @@ public class HomeController {
 			dao.sendMoney(fromAccountId, toAccountId, amount);
 		} catch (BankTransactionException e) {
 			handlerEvents("Error: " + e.getMessage());
-		} catch (CannotCreateTransactionException e) {
+		} catch (CannotCreateTransactionException | TransactionSystemException e) {
 			handlerEvents(Constants.CONNECTION_REFUSED);
 			return model;
 		}

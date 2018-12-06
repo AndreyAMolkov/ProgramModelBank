@@ -50,8 +50,8 @@ private static Logger log = LoggerFactory.getLogger("demo.controller.Main");
 			try (Session session = sessionFactory.openSession()) {
 				EntityManager em = session.getEntityManagerFactory().createEntityManager();
 				em.getTransaction().begin();
-				Data data = new Data("Ivan", "Ivanovich", "Vasin");
-				Credential credential = new Credential("root", "1234", "ADMIN");
+				Data data = new Data("Maz", "Mazov", "Mazin");
+				Credential credential = new Credential("boot", "1234", "ADMIN");
 				Client client = new Client(credential, data);
 				em.persist(client);
 				em.getTransaction().commit();
