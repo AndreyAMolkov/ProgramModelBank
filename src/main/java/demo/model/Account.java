@@ -16,11 +16,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import demo.constant.Constants;
 
 @Entity(name = "Account")
 @Table(name = "accounts")
 public class Account {
+	private static Logger log = LoggerFactory.getLogger("demo.model.Account");
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -74,10 +79,17 @@ public class Account {
 	}
 
 	public String getHistoriesSize() {
+		String nameMethod = "getHistoriesSize";
 		if (histories == null) {
 			return "empty";
 		}
-		int result = getHistories().size();
+		int result=0;
+		try {
+		result= getHistories().size();
+		}catch(IllegalStateException e) {
+			log.debug(nameMethod + Constants.ONE_PARAMETERS,"error load for getHistories().size()","true");
+			
+		}
 		return String.valueOf(result);
 	}
 

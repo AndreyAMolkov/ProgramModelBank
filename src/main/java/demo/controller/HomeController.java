@@ -86,7 +86,7 @@ public class HomeController {
 				Constants.PRINCIPAL_ROLE, rolePrincipal, Constants.CLIENT_ID, id, Constants.ACCOUNT_ID, idAccount);
 		clearSettingOfOldModel();
 		loadOneClient(id);
-		if (loadCurrentAccount(idAccount) == null && infoProblem.getCause() != null) {
+		if (loadCurrentAccount(idAccount) == null && infoProblem.getCause() == null) {
 			handlerEvents(Constants.NOT_FOUND_CARD + idAccount);
 		}
 		model.setViewName(Constants.CLIENT_SHOW_FOR_ADMIN);
@@ -110,22 +110,20 @@ public class HomeController {
 
 	// Spring Security see this :
 	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
-	public ModelAndView login(
-			@RequestParam(value = "error", required = false) String error,
+	public ModelAndView login(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout,
 			@RequestParam(value = "accessDenied", required = false) String accessDenied
-			
-			) {
+
+	) {
 		String nameMethod = "login";
 		log.debug(nameMethod + Constants.TWO_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal, Constants.PRINCIPAL_ROLE,
 				rolePrincipal);
-		if(accessDenied!=null) {
+		if (accessDenied != null) {
 			model.addObject("accessDenied", accessDenied);
-			log.warn(nameMethod + Constants.THREE_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal, Constants.PRINCIPAL_ROLE,
-					rolePrincipal,"accessDenied ",accessDenied);
+			log.warn(nameMethod + Constants.THREE_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal,
+					Constants.PRINCIPAL_ROLE, rolePrincipal, "accessDenied ", accessDenied);
 		}
 
-		
 		model.setViewName(Constants.PAGE_LOGIN);
 		return model;
 	}
@@ -314,8 +312,13 @@ public class HomeController {
 		log.debug(nameMethod + Constants.FOUR_PARAMETERS, Constants.PRINCIPAL_ID, idPrincipal, Constants.PRINCIPAL_ROLE,
 				rolePrincipal, Constants.CLIENT_ID, id, Constants.ACCOUNT_ID, idAccount);
 		clearSettingOfOldModel();
-		if (!dao.deleteAccount(id, idAccount)) {
-			handlerEvents("not found card: " + idAccount);
+		try {
+			Boolean flag = dao.deleteAccount(id, idAccount);
+			if (!flag) {
+				handlerEvents("not found card: " + idAccount);
+			}
+		} catch (CannotCreateTransactionException e1) {
+			handlerEvents(Constants.CONNECTION_REFUSED);
 		}
 		model.setViewName("showClientAdmin");
 		loadOneClient(id);
@@ -418,7 +421,7 @@ public class HomeController {
 			handlerEvents("Error: " + e.getMessage());
 		} catch (CannotCreateTransactionException | TransactionSystemException e) {
 			handlerEvents(Constants.CONNECTION_REFUSED);
-			return model;
+
 		}
 		model.setViewName("showClient");
 
