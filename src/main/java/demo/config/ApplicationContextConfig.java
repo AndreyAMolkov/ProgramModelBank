@@ -15,11 +15,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -63,12 +65,12 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 	public Client getClient() {
 		return new Client();
 	}
-
+	
 	@Bean(name = "accountCheckAddSum")
 	public AccountCheckAddSum getAccountCheckAddSum() {
 		return new AccountCheckAddSum();
 	}
-
+	@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 	@Bean
 	public InfoProblem infoProblem() {
 		return new InfoProblem();
@@ -81,6 +83,7 @@ public class ApplicationContextConfig implements TransactionManagementConfigurer
 	}
 
 	@Bean(name = "model")
+	@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 	public ModelAndView getModel() {
 		return new ModelAndView();
 	}

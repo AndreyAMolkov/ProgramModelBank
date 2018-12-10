@@ -26,6 +26,9 @@ public final class Constants {
 	public static final String FORM_SEND_MONEY = "sendMoneyForm";
 	public static final String CANNOT_CREATE_TRANSACTION = "Can't create transaction, try again later ...";
 	public static final String CONNECTION_REFUSED = "Connection refused, try again later ...";
+	public static final String INPUT_AMOUNT = "Input";
+	public static final String OUTPUT_AMOUNT = "Output";
+	
 	private Constants() {
 	}
 }

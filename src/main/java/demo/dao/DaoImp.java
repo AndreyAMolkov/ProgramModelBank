@@ -32,13 +32,15 @@ public class DaoImp extends BaseDao implements Dao {
 
 	// MANDATORY: Transaction must be created before.
 	@Transactional(propagation = Propagation.MANDATORY)
-	public void addAmount(Long id, Long amount, Long idPartner) throws BankTransactionException,TransactionSystemException {
+	public Long addAmount(Long id, Long amount, Long idPartner)
+			throws BankTransactionException, TransactionSystemException {
 
 		Account account = getAccountById(id);
+		
 		if (account == null) {
 			throw new BankTransactionException("Account not found " + id);
 		}
-
+		Long amountBefore = account.getSum();
 		if (account.getSum() + amount < 0) {
 			throw new BankTransactionException(
 					"The money in the account '" + id + "' is not enough (" + account.getSum() + ")");
@@ -46,20 +48,27 @@ public class DaoImp extends BaseDao implements Dao {
 
 		if (amount >= 0) {
 			Story storyInput = getStory();
-			storyInput.input("transfer from" + idPartner, amount);
+			storyInput.input("transfer from " + idPartner, amount);
 			account.setHistories(storyInput);
 		} else {
 			Story storyOutput = getStory();
 			storyOutput.output("transfer to " + idPartner, amount);
 			account.setHistories(storyOutput);
 		}
+		Long amountAfter = account.getSum();
+		return amountBefore - amountAfter;
 
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount) throws BankTransactionException, TransactionSystemException {
-		addAmount(toAccountId, amount, fromAccountId);
-		addAmount(fromAccountId, -amount, toAccountId);
+	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount)
+			throws BankTransactionException, TransactionSystemException {
+		String nameMethod = "sendMoney";
+		Long amountInput = addAmount(toAccountId, amount, fromAccountId);
+		Long amountOutput = addAmount(fromAccountId, -amount, toAccountId);
+	if(amountInput+amountOutput !=0L) {
+		throw new BankTransactionException("Error check different amount for " + nameMethod);
+	}
 	}
 
 	@Transactional(readOnly = true, rollbackFor = javax.persistence.NoResultException.class)

@@ -31,7 +31,7 @@ public interface Dao {
 
 	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount) throws BankTransactionException;
 
-	public void addAmount(Long id, Long amount, Long idPartner) throws BankTransactionException;
+	public Long addAmount(Long id, Long amount, Long idPartner) throws BankTransactionException;
 
 	public List<Client> getAll();
 

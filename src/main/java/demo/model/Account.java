@@ -83,12 +83,12 @@ public class Account {
 		if (histories == null) {
 			return "empty";
 		}
-		int result=0;
+		int result = 0;
 		try {
-		result= getHistories().size();
-		}catch(IllegalStateException e) {
-			log.debug(nameMethod + Constants.ONE_PARAMETERS,"error load for getHistories().size()","true");
-			
+			result = getHistories().size();
+		} catch (IllegalStateException e) {
+			log.debug(nameMethod + Constants.ONE_PARAMETERS, "error load for getHistories().size()", "true");
+
 		}
 		return String.valueOf(result);
 	}
@@ -125,26 +125,33 @@ public class Account {
 
 	private boolean validateStory(Story story) {
 		Long sumOfStory = story.getSum();
-		Long sumOfAccount = getSum();
-		Boolean flag = true;
+		Boolean flag = false;
 
-		if (("output").equals(story.getOperation())) {
-			Long result = sumOfAccount - sumOfStory;
-			if (result < 0)
-				flag = false;
+		if ((Constants.OUTPUT_AMOUNT).equals(story.getOperation())) {
+			flag = (sumOfStory < 0);
+
 		}
+		if ((Constants.INPUT_AMOUNT).equals(story.getOperation())) {
+			flag = (sumOfStory > 0);
+		}
+
 		return flag;
 	}
 
 	public void setHistories(Story story) {
+		String nameMethod = "setHistories";
 		Long sumOfStory = story.getSum();
 
 		if (validateStory(story)) {
 			setSum(sumOfStory);
+			story.setAccount(getNumber());
+			this.histories.add(story);
+			return;
 		}
+		log.warn(nameMethod + Constants.FOUR_PARAMETERS, "error load story", "true", "operation", story.getOperation(),
+				"exemples of operations", Constants.INPUT_AMOUNT + ", " + Constants.OUTPUT_AMOUNT, 
+				"sumOfStory", sumOfStory);
 
-		story.setAccount(getNumber());
-		this.histories.add(story);
 	}
 
 	@Override

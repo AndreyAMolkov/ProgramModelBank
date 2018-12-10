@@ -1,6 +1,7 @@
 package demo.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -57,4 +58,48 @@ public class AccountTest {
 		assertEquals(story4, resultStoryList.get(3));
 		assertEquals(story5, resultStoryList.get(4));
 	}
+
+	@Test
+	public void setHistories_NormalInput_10L() {
+		Long value = 10L;
+		when(story1.getSum()).thenReturn(value);
+		when(story1.getOperation()).thenReturn("input");
+
+		account.setHistories(story1);
+
+		assertTrue(value.equals(account.getSum()));
+		;
+	}
+
+	@Test
+	public void setHistories_NormalOutput_20minus10() {
+		Long value1 = 20L;
+		Long value2 = -10L;
+		Long expected = value1 + value2;
+		when(story1.getSum()).thenReturn(value1);
+		when(story1.getOperation()).thenReturn("input");
+		when(story2.getSum()).thenReturn(value2);
+		when(story2.getOperation()).thenReturn("output");
+
+		account.setHistories(story1);
+		account.setHistories(story2);
+
+		assertTrue(expected.equals(account.getSum()));
+	}
+
+	@Test
+	public void setHistories_VolatileCountHistories_OneStory() {
+		Long value1 = 20L;
+		Long value2 = 10L;
+		when(story1.getSum()).thenReturn(value1);
+		when(story1.getOperation()).thenReturn("input");
+		when(story2.getSum()).thenReturn(value2);
+		when(story2.getOperation()).thenReturn("output");
+
+		account.setHistories(story1);
+		account.setHistories(story2);
+
+		assertEquals("1", account.getHistoriesSize());
+	}
+
 }

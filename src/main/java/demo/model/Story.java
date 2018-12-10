@@ -10,6 +10,8 @@ import javax.persistence.Table;
 
 import org.springframework.context.annotation.Scope;
 
+import demo.constant.Constants;
+
 @Entity(name = "Story")
 @Table(name = "stories")
 @Scope(value = "prototype")
@@ -38,14 +40,14 @@ public class Story {
 
 	public void input(String place, Long sum) {
 		setDate(date);
-		setOperation("Input");
+		setOperation(Constants.INPUT_AMOUNT);
 		setPlace(place);
 		setSum(sum);
 	}
 
 	public void output(String place, Long sum) {
 		setDate(date);
-		setOperation("Output");
+		setOperation(Constants.OUTPUT_AMOUNT);
 		setPlace(place);
 		setSum(sum);
 	}

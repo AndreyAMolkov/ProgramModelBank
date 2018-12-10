@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.annotation.Transactional;
 
+import demo.constant.Constants;
 import demo.dao.Dao;
 import demo.model.Client;
 import demo.model.Credential;
@@ -29,7 +30,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
 		try {
 			credential = dao.findCredentialByname(username);
 		} catch (CannotCreateTransactionException e) {
-			log.warn(nameMethod + " {}={}", "message", e);
+			log.warn(nameMethod +  Constants.ONE_PARAMETERS, "message", e);
 		}
 		UserBuilder builder = null;
 		Client client = null;
@@ -38,10 +39,10 @@ public class UserDetailsServiceImp implements UserDetailsService {
 			builder = org.springframework.security.core.userdetails.User.withUsername(username);
 			builder.password(credential.getPassword());
 			builder.roles(credential.getRole());
-		log.debug(nameMethod + " {}={}  {}={} ", "username", username, "NameFromData", client.getNameFromData());
+		log.debug(nameMethod + Constants.THREE_PARAMETERS, Constants.CLIENT_ID, client.getId(),"login", username, "NameFromData", client.getNameFromData());
 		} else {
 			String message = "User: " + username + " not found";
-			log.warn(nameMethod + " {}={}", "message", message);
+			log.warn(nameMethod + Constants.ONE_PARAMETERS, "message", message);
 			throw new UsernameNotFoundException(message);
 		}
 		
