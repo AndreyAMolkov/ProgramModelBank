@@ -28,6 +28,7 @@ public final class Constants {
 	public static final String CONNECTION_REFUSED = "Connection refused, try again later ...";
 	public static final String INPUT_AMOUNT = "Input";
 	public static final String OUTPUT_AMOUNT = "Output";
+	public static final String MESSAGE = "message";
 	
 	private Constants() {
 	}

@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import demo.constant.Constants;
+
 @RunWith(MockitoJUnitRunner.class)
 public class AccountTest {
 
@@ -63,7 +65,7 @@ public class AccountTest {
 	public void setHistories_NormalInput_10L() {
 		Long value = 10L;
 		when(story1.getSum()).thenReturn(value);
-		when(story1.getOperation()).thenReturn("input");
+		when(story1.getOperation()).thenReturn(Constants.INPUT_AMOUNT);
 
 		account.setHistories(story1);
 
@@ -77,9 +79,9 @@ public class AccountTest {
 		Long value2 = -10L;
 		Long expected = value1 + value2;
 		when(story1.getSum()).thenReturn(value1);
-		when(story1.getOperation()).thenReturn("input");
+		when(story1.getOperation()).thenReturn(Constants.INPUT_AMOUNT);
 		when(story2.getSum()).thenReturn(value2);
-		when(story2.getOperation()).thenReturn("output");
+		when(story2.getOperation()).thenReturn(Constants.OUTPUT_AMOUNT);
 
 		account.setHistories(story1);
 		account.setHistories(story2);
@@ -92,9 +94,9 @@ public class AccountTest {
 		Long value1 = 20L;
 		Long value2 = 10L;
 		when(story1.getSum()).thenReturn(value1);
-		when(story1.getOperation()).thenReturn("input");
+		when(story1.getOperation()).thenReturn(Constants.INPUT_AMOUNT);
 		when(story2.getSum()).thenReturn(value2);
-		when(story2.getOperation()).thenReturn("output");
+		when(story2.getOperation()).thenReturn(Constants.OUTPUT_AMOUNT);
 
 		account.setHistories(story1);
 		account.setHistories(story2);
