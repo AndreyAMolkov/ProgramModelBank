@@ -1,14 +1,12 @@
 package demo.dao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import demo.model.Account;
 import demo.model.Client;
 import demo.model.Credential;
@@ -24,14 +22,16 @@ public class DaoImp extends BaseDao implements Dao {
 		return new Story();
 	}
 
-	@Transactional(rollbackFor = Exception.class)
+	@Override
+    @Transactional(rollbackFor = Exception.class)
 	public void newAccount(Long id) {
 		Client client = getClientById(id);
 		client.setAccounts(new Account());
 	}
 
 	// MANDATORY: Transaction must be created before.
-	@Transactional(propagation = Propagation.MANDATORY)
+	@Override
+    @Transactional(propagation = Propagation.MANDATORY)
 	public Long addAmount(Long id, Long amount, Long idPartner)
 			throws BankTransactionException, TransactionSystemException {
 
@@ -60,7 +60,8 @@ public class DaoImp extends BaseDao implements Dao {
 
 	}
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	@Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
 	public void sendMoney(Long fromAccountId, Long toAccountId, Long amount)
 			throws BankTransactionException, TransactionSystemException {
 		String nameMethod = "sendMoney";
@@ -80,7 +81,8 @@ public class DaoImp extends BaseDao implements Dao {
 		return list.getSingleResult();
 	}
 
-	@Transactional(rollbackFor = Exception.class)
+	@Override
+    @Transactional(rollbackFor = Exception.class)
 	public void addSumAccount(Long number, Long sum, String source) {
 		Account account = getAccountById(number);
 		Story storyInput = getStory();
@@ -88,7 +90,8 @@ public class DaoImp extends BaseDao implements Dao {
 		account.setHistories(storyInput);
 	}
 
-	@Transactional
+	@Override
+    @Transactional
 	public Boolean deleteAccount(Long id, Long number) {
 		Client client = getClientById(id);
 		for (Account account : client.getAccounts()) {
@@ -100,7 +103,8 @@ public class DaoImp extends BaseDao implements Dao {
 		return false;
 	}
 
-	@Transactional(readOnly = true)
+	@Override
+    @Transactional(readOnly = true)
 	public Boolean findLoginInBd(String login) {
 		Boolean result = false;
 		if (findCredentialByname(login) != null) {
@@ -109,11 +113,13 @@ public class DaoImp extends BaseDao implements Dao {
 		return result;
 	}
 
-	public Boolean clientHaveAccount(Client client, Long numberAccount) {
+	@Override
+    public Boolean clientHaveAccount(Client client, Long numberAccount) {
 		return client.getAccounts().stream().map(Account::getNumber).anyMatch(e -> e.equals(numberAccount));
 	}
 
-	@Transactional(readOnly = true)
+	@Override
+    @Transactional(readOnly = true)
 	public Object nameLoginClientOwner(Long idClientOwner) {
 		String name = null;
 		Client client = getClientById(idClientOwner);
